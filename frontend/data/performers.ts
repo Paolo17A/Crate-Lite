@@ -60,7 +60,7 @@ const galleryC = [
 ];
 
 export const performers: Performer[] = [
-  // —— Musicians (6+) ——
+  // —— Musicians ——
   {
     id: "moira-dela-torre",
     name: "Moira dela Torre",
@@ -187,8 +187,62 @@ export const performers: Performer[] = [
     { youtubeId: "dvgZkm1xWPE", title: "Viva La Vida (Unplugged Mood)" },
   ]),
   },
+  {
+    id: "juan-karlos",
+    name: "Juan Karlos",
+    category: "Musician",
+    genres: ["OPM", "Rock", "Alternative"],
+    price: 160000,
+    location: "Metro Manila",
+    photoUrl:
+      "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1400&h=600&fit=crop",
+    biography:
+      "Guitar-driven OPM artist with raw vocals and stadium-ready hooks. A strong pick for concerts, campus tours, and high-energy private nights. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryB, [
+      { youtubeId: "BuA6z5Mq8pE", title: "Buwan (Live Mood)" },
+      { youtubeId: "fJ9rUzIMcZQ", title: "Bohemian Rhapsody (Alt Night)" },
+    ]),
+  },
+  {
+    id: "regine-velasquez",
+    name: "Regine Velasquez",
+    category: "Musician",
+    genres: ["OPM", "Ballad", "Pop"],
+    price: 450000,
+    location: "Metro Manila",
+    photoUrl:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1400&h=600&fit=crop",
+    biography:
+      "Asia's Songbird — powerhouse vocals for galas, corporate milestones, and landmark celebrations. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryA, [
+      { youtubeId: "YQHsXMglC9A", title: "Hello (Vocal Showcase)" },
+      { youtubeId: "lp-EO5I60KA", title: "Thinking Out Loud (Ballad Night)" },
+    ]),
+  },
+  {
+    id: "enzo-almario",
+    name: "Enzo Almario",
+    category: "Musician",
+    genres: ["Jazz", "Soul", "OPM"],
+    price: 95000,
+    location: "Cebu",
+    photoUrl:
+      "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=1400&h=600&fit=crop",
+    biography:
+      "Smooth jazz and soul vocalist for lounges, hotel residencies, and refined dinners. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryA, [
+      { youtubeId: "fJ9rUzIMcZQ", title: "Jazz Standard Night" },
+      { youtubeId: "2Vv-BfVoq4g", title: "Perfect (Lounge Take)" },
+    ]),
+  },
 
-  // —— Bands (6+) ——
+  // —— Bands ——
   {
     id: "ben-and-ben",
     name: "Ben & Ben",
@@ -315,8 +369,62 @@ export const performers: Performer[] = [
     { youtubeId: "fJ9rUzIMcZQ", title: "Bohemian Rhapsody (Classic Night)" },
   ]),
   },
+  {
+    id: "parokya-ni-edgar",
+    name: "Parokya ni Edgar",
+    category: "Band",
+    genres: ["OPM", "Rock", "Comedy"],
+    price: 350000,
+    location: "Metro Manila",
+    photoUrl:
+      "https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=1400&h=600&fit=crop",
+    biography:
+      "Iconic OPM rock band with irreverent humor and crowd-favorite anthems. Book for festivals, campus concerts, and big private parties. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryB, [
+      { youtubeId: "7wtfhZwyrcc", title: "Believer (Rock Warmup)" },
+      { youtubeId: "hTWKbfoikeg", title: "Smells Like Teen Spirit (Live Energy)" },
+    ]),
+  },
+  {
+    id: "orange-and-lemons",
+    name: "Orange & Lemons",
+    category: "Band",
+    genres: ["OPM", "Indie", "Pop"],
+    price: 175000,
+    location: "Others",
+    photoUrl:
+      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1501612780327-45045538702b?w=1400&h=600&fit=crop",
+    biography:
+      "Indie-pop band known for bright melodies and nostalgic OPM hits. Ideal for reunions, corporate nights, and outdoor festivals. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryC, [
+      { youtubeId: "09R8_2nJtjg", title: "Sugar (Festival Warmup)" },
+      { youtubeId: "dvgZkm1xWPE", title: "Viva La Vida (Indie Night)" },
+    ]),
+  },
+  {
+    id: "the-juans",
+    name: "The Juans",
+    category: "Band",
+    genres: ["OPM", "Pop", "Ballad"],
+    price: 190000,
+    location: "Davao",
+    photoUrl:
+      "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1400&h=600&fit=crop",
+    biography:
+      "Heartfelt OPM pop band with romantic hits and polished live arrangements. Perfect for weddings, mall tours, and brand events. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryB, [
+      { youtubeId: "Bcv2cH8rsKU", title: "Kathang Isip (Band Mood)" },
+      { youtubeId: "2Vv-BfVoq4g", title: "Perfect (Wedding Set)" },
+    ]),
+  },
 
-  // —— DJs (6+) ——
+  // —— DJs ——
   {
     id: "dj-ace-ramos",
     name: "DJ Ace Ramos",
@@ -425,8 +533,80 @@ export const performers: Performer[] = [
     { youtubeId: "pRpeEdMmmQ0", title: "Waka Waka (Pool Party)" },
   ]),
   },
+  {
+    id: "dj-nix-prudence",
+    name: "DJ Nix Prudence",
+    category: "DJ",
+    genres: ["Disco", "Funk", "Top 40"],
+    price: 52000,
+    location: "Metro Manila",
+    photoUrl:
+      "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1400&h=600&fit=crop",
+    biography:
+      "Funky disco selector for wedding receptions, hotel lounges, and retro-themed nights. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryC, [
+      { youtubeId: "OPf0YbXqDm0", title: "Uptown Funk (Disco Floor)" },
+      { youtubeId: "KQ6zr6kCPj8", title: "Party Rock Anthem" },
+    ]),
+  },
+  {
+    id: "dj-kira-vale",
+    name: "DJ Kira Vale",
+    category: "DJ",
+    genres: ["House", "Pop", "EDM"],
+    price: 58000,
+    location: "Others",
+    photoUrl:
+      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1400&h=600&fit=crop",
+    biography:
+      "Versatile house and pop DJ for regional tours, resort takeovers, and corporate parties. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryC, [
+      { youtubeId: "IcrbM1l_BoI", title: "Wake Me Up (Peak Hour)" },
+      { youtubeId: "4NRXx6U8ABQ", title: "Blinding Lights (Resort Set)" },
+    ]),
+  },
+  {
+    id: "dj-bombi",
+    name: "DJ Bombi",
+    category: "DJ",
+    genres: ["OPM", "Mashup", "Top 40"],
+    price: 42000,
+    location: "Cebu",
+    photoUrl:
+      "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=1400&h=600&fit=crop",
+    biography:
+      "OPM mashup specialist keeping Visayas dance floors singing along all night. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryC, [
+      { youtubeId: "JRfuAukYTKg", title: "Titanium (Mashup Peak)" },
+      { youtubeId: "9bZkp7q19f0", title: "GANGNAM STYLE (Crowd Drop)" },
+    ]),
+  },
+  {
+    id: "dj-nova-reef",
+    name: "DJ Nova Reef",
+    category: "DJ",
+    genres: ["Techno", "Minimal", "Electronic"],
+    price: 65000,
+    location: "Palawan",
+    photoUrl:
+      "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1400&h=600&fit=crop",
+    biography:
+      "Minimal techno and late-night electronic sets for island clubs and boutique festivals. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryC, [
+      { youtubeId: "60ItHLz5WEA", title: "Faded (Techno Journey)" },
+      { youtubeId: "wXhTHyIgQ_U", title: "Circles (After Hours)" },
+    ]),
+  },
 
-  // —— Other (6+) ——
+  // —— Other ——
   {
     id: "gloc-9",
     name: "Gloc-9",
@@ -534,6 +714,78 @@ export const performers: Performer[] = [
     { youtubeId: "L_jWHffIx5E", title: "All Star (Show Opener)" },
     { youtubeId: "2vjPBrBU-TM", title: "Chandelier (Festival Bit)" },
   ]),
+  },
+  {
+    id: "vice-ganda",
+    name: "Vice Ganda",
+    category: "Other",
+    genres: ["Comedy", "Host", "Variety"],
+    price: 550000,
+    location: "Metro Manila",
+    photoUrl:
+      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=1400&h=600&fit=crop",
+    biography:
+      "A-list comedy and hosting for arena shows, brand launches, and major celebrations. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryC, [
+      { youtubeId: "L_jWHffIx5E", title: "All Star (Show Opener)" },
+      { youtubeId: "CevxZvSJLk8", title: "Roar (Variety Bit)" },
+    ]),
+  },
+  {
+    id: "bayanihan-dance-collective",
+    name: "Bayanihan Dance Collective",
+    category: "Other",
+    genres: ["Dance", "Cultural", "Performance"],
+    price: 90000,
+    location: "Others",
+    photoUrl:
+      "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1400&h=600&fit=crop",
+    biography:
+      "Cultural dance ensemble for festivals, diplomatic events, and heritage celebrations. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryC, [
+      { youtubeId: "0KSOMA3QBU0", title: "Dark Horse (Dance Showcase)" },
+      { youtubeId: "pRpeEdMmmQ0", title: "Waka Waka (Festival Set)" },
+    ]),
+  },
+  {
+    id: "string-quartet-manila",
+    name: "String Quartet Manila",
+    category: "Other",
+    genres: ["Classical", "Wedding", "Instrumental"],
+    price: 75000,
+    location: "Metro Manila",
+    photoUrl:
+      "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1458560871784-56d23406c091?w=1400&h=600&fit=crop",
+    biography:
+      "Elegant string quartet for ceremonies, cocktail hours, and upscale dinners. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryA, [
+      { youtubeId: "YykjpeuMNEk", title: "Hymn For The Weekend (Strings)" },
+      { youtubeId: "2Vv-BfVoq4g", title: "Perfect (Ceremony)" },
+    ]),
+  },
+  {
+    id: "magician-enzo",
+    name: "Magician Enzo",
+    category: "Other",
+    genres: ["Magic", "Variety", "Kids"],
+    price: 40000,
+    location: "Cebu",
+    photoUrl:
+      "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600&h=600&fit=crop",
+    coverUrl:
+      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1400&h=600&fit=crop",
+    biography:
+      "Close-up and stage magic for birthdays, corporate mixers, and family events. Over the years, they have built a devoted following across the Philippines through consistent live performances, thoughtful setlists, and a genuine connection with every audience. Beyond the hits, their shows are crafted to fit the energy of the room — whether that means an intimate acoustic evening or a full production for a major celebration. Clients often note the professionalism from booking to load-out, clear communication, and a collaborative approach to song requests and event flow. Available for weddings, corporate functions, festivals, and private gatherings nationwide.",
+    gallery: galleryFrom(galleryB, [
+      { youtubeId: "2vjPBrBU-TM", title: "Chandelier (Show Bit)" },
+      { youtubeId: "L_jWHffIx5E", title: "All Star (Kids Party)" },
+    ]),
   },
 ];
 
