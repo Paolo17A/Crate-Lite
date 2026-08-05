@@ -38,14 +38,14 @@ function GalleryThumb({
     <button
       type="button"
       onClick={onSelect}
-      className="relative aspect-square overflow-hidden bg-stone/40 transition-opacity hover:opacity-90"
+      className="relative aspect-square min-w-0 flex-1 overflow-hidden bg-stone/40 transition-opacity hover:opacity-90 lg:flex-none"
       aria-label={label}
     >
       <Image
         src={src}
         alt={isVideo ? item.title : `${name} gallery ${index + 1}`}
         fill
-        sizes="160px"
+        sizes="(min-width: 1024px) 80px, 11vw"
         className="object-cover"
       />
       {isVideo && (
@@ -55,8 +55,11 @@ function GalleryThumb({
             className="absolute inset-0 flex items-center justify-center"
             aria-hidden="true"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-sand/95 text-espresso shadow-sm">
-              <svg viewBox="0 0 24 24" className="ml-0.5 h-4 w-4 fill-current">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-sand/95 text-espresso shadow-sm lg:h-9 lg:w-9">
+              <svg
+                viewBox="0 0 24 24"
+                className="ml-px h-2.5 w-2.5 fill-current lg:ml-0.5 lg:h-4 lg:w-4"
+              >
                 <path d="M8 5v14l11-7z" />
               </svg>
             </span>
@@ -256,7 +259,7 @@ export default function PerformerGallery({ name, items }: Props) {
             </button>
           )}
         </div>
-        <div className="mt-3 grid grid-cols-3 gap-1 overflow-hidden rounded-md sm:gap-1.5">
+        <div className="mt-3 flex gap-0.5 overflow-hidden rounded-md lg:grid lg:grid-cols-3 lg:gap-1.5">
           {previewItems.map((item, i) => (
             <GalleryThumb
               key={

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { formatPeso } from "@/lib/format";
 import type { Performer } from "@/types/performer";
 
@@ -33,6 +34,12 @@ export default function BookingSummary({ performer }: Props) {
           <p className="mt-1 text-sm text-espresso/60">
             {performer.category} · {performer.location}
           </p>
+          <Link
+            href={`/performers/${performer.id}`}
+            className="mt-2 inline-block text-sm font-medium text-burnt-orange underline underline-offset-4 transition-opacity hover:opacity-80"
+          >
+            View Profile
+          </Link>
         </div>
       </div>
 
