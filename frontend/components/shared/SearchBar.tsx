@@ -42,8 +42,8 @@ export default function SearchBar({ id, compact = false }: Props) {
         placeholder="Search for performers…"
         className={
           compact
-            ? "w-full rounded border border-stone bg-white py-2.5 pl-5 pr-14 text-base text-espresso outline-none transition placeholder:text-espresso/50 focus:border-burnt-orange focus:ring-2 focus:ring-burnt-orange/30"
-            : "w-full rounded border border-burnt-orange/40 bg-burnt-orange/50 py-4 pl-8 pr-20 text-lg text-sand shadow-[0_12px_40px_rgba(43,38,35,0.35)] outline-none transition placeholder:text-sand/80 focus:border-burnt-orange focus:ring-2 focus:ring-burnt-orange/50 sm:py-5 sm:pl-10 sm:pr-24 sm:text-xl"
+            ? "search-input w-full rounded border border-stone bg-white py-2.5 pl-5 pr-14 text-base text-espresso outline-none transition placeholder:text-espresso/50 focus:border-burnt-orange focus:ring-2 focus:ring-burnt-orange/30"
+            : "search-input w-full rounded border border-burnt-orange/40 bg-burnt-orange/50 py-4 pl-8 pr-20 text-lg text-sand shadow-[0_12px_40px_rgba(43,38,35,0.35)] outline-none transition placeholder:text-sand/80 focus:border-burnt-orange focus:ring-2 focus:ring-burnt-orange/50 sm:py-5 sm:pl-10 sm:pr-24 sm:text-xl"
         }
       />
       <button
