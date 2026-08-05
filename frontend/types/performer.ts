@@ -1,5 +1,12 @@
 export type PerformerCategory = "DJ" | "Musician" | "Band" | "Other";
 
+export type PerformerLocation =
+  | "Metro Manila"
+  | "Palawan"
+  | "Cebu"
+  | "Davao"
+  | "Others";
+
 export type GalleryVideo = {
   type: "video";
   youtubeId: string;
@@ -19,7 +26,7 @@ export type Performer = {
   category: PerformerCategory;
   genres: string[];
   price: number;
-  location: string;
+  location: PerformerLocation;
   photoUrl: string;
   coverUrl: string;
   biography: string;

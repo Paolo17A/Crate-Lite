@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AvailabilityCalendar from "@/components/shared/AvailabilityCalendar";
@@ -90,7 +90,7 @@ export default function BookingForm({ performer }: Props) {
     return "";
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const nextDateError = validateDate(eventDate);

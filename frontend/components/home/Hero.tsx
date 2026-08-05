@@ -46,7 +46,7 @@ export default function Hero() {
           <CrateLogo
             priority
             link={false}
-            className="[&_img]:!h-32 sm:[&_img]:!h-40 md:[&_img]:!h-48"
+            className="[&_img]:h-32! sm:[&_img]:h-40! md:[&_img]:h-48!"
           />
         </div>
 

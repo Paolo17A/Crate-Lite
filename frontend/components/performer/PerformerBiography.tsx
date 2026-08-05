@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useIsClient } from "@/hooks/useIsClient";
 
 type Props = {
   name: string;
@@ -18,11 +19,7 @@ export default function PerformerBiography({
   const textRef = useRef<HTMLParagraphElement>(null);
   const [clamped, setClamped] = useState(false);
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsClient();
 
   useEffect(() => {
     const el = textRef.current;
@@ -92,7 +89,7 @@ export default function PerformerBiography({
         open &&
         createPortal(
           <div
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-espresso/80 p-4"
+            className="fixed inset-0 z-200 flex items-center justify-center bg-espresso/80 p-4"
             role="dialog"
             aria-modal="true"
             aria-label={`${name} biography`}

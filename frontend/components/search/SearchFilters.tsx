@@ -6,14 +6,10 @@ import {
   budgetRanges,
   categories,
   locations,
-} from "@/data/performers";
+} from "@/lib/performers";
+import type { FilterSelection } from "@/types/search";
 
-export type FilterSelection = {
-  categories: string[];
-  locations: string[];
-  genres: string[];
-  budgetId: string;
-};
+export type { FilterSelection };
 
 type Props = {
   applied: FilterSelection;
@@ -242,13 +238,6 @@ export default function SearchFilters({
 
   const appliedCount = countActive(applied);
   const draftCount = countActive(draft);
-  const panelVisible = embedded || open;
-
-  useEffect(() => {
-    if (panelVisible) {
-      setDraft(applied);
-    }
-  }, [panelVisible, applied]);
 
   useEffect(() => {
     if (embedded || !open) return;
@@ -316,7 +305,10 @@ export default function SearchFilters({
         type="button"
         aria-expanded={open}
         aria-controls={panelId}
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => {
+          if (!open) setDraft(applied);
+          setOpen((value) => !value);
+        }}
         className="inline-flex items-center gap-2 rounded bg-burnt-orange px-4 py-2.5 text-sm font-medium text-sand transition-colors hover:bg-burnt-orange/90"
       >
         Filters

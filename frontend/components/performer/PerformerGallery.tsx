@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
+import { useIsClient } from "@/hooks/useIsClient";
 import type { GalleryItem } from "@/types/performer";
 
 type Props = {
@@ -69,15 +70,11 @@ function GalleryThumb({
 export default function PerformerGallery({ name, items }: Props) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
 
   const previewItems = items.slice(0, PREVIEW_LIMIT);
   const hasMore = items.length > PREVIEW_LIMIT;
   const activeItem = activeIndex !== null ? items[activeIndex] : null;
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (activeIndex === null && !showAll) return;
@@ -112,7 +109,7 @@ export default function PerformerGallery({ name, items }: Props) {
   const allMediaModal =
     showAll && (
       <div
-        className="fixed inset-0 z-[200] flex items-center justify-center bg-espresso/80 p-4"
+        className="fixed inset-0 z-200 flex items-center justify-center bg-espresso/80 p-4"
         role="dialog"
         aria-modal="true"
         aria-label="All media"
@@ -156,7 +153,7 @@ export default function PerformerGallery({ name, items }: Props) {
   const previewModal =
     activeItem && activeIndex !== null && (
       <div
-        className="fixed inset-0 z-[210] flex items-center justify-center bg-espresso/90 p-4"
+        className="fixed inset-0 z-210 flex items-center justify-center bg-espresso/90 p-4"
         role="dialog"
         aria-modal="true"
         aria-label={

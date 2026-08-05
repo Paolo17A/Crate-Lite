@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import BookingForm from "@/components/booking/BookingForm";
 import BookingSummary from "@/components/booking/BookingSummary";
-import { getPerformerById, performers } from "@/data/performers";
+import { performers } from "@/data/performers";
+import { getPerformerById } from "@/lib/performers";
 
 type Props = {
   params: Promise<{ id: string }>;

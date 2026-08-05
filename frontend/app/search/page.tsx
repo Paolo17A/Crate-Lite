@@ -1,5 +1,5 @@
 import SearchResults from "@/components/search/SearchResults";
-import { budgetRanges } from "@/data/performers";
+import { budgetRanges } from "@/lib/performers";
 
 type Props = {
   searchParams: Promise<{

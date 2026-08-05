@@ -22,7 +22,7 @@ export default function RelatedPerformers({ performers }: Props) {
       </h2>
       <ul className="mt-6 flex flex-wrap justify-center gap-5 sm:gap-6">
         {visible.map((performer) => (
-          <li key={performer.id} className="w-[210px] shrink-0 sm:w-[230px]">
+          <li key={performer.id} className="w-52.5 shrink-0 sm:w-57.5">
             <PerformerCard performer={performer} />
           </li>
         ))}

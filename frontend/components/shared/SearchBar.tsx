@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 type Props = {
@@ -19,7 +19,7 @@ export default function SearchBar({ id, compact = false }: Props) {
     setQuery(urlQuery);
   }, [urlQuery]);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const q = query.trim();
     if (!q) {

@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import type {
+  SortDirection,
+  SortField,
+  SortSelection,
+} from "@/types/search";
 
-export type SortField = "name" | "budget";
-export type SortDirection = "asc" | "desc";
-
-export type SortSelection = {
-  field: SortField;
-  direction: SortDirection;
-};
+export type { SortDirection, SortField, SortSelection };
 
 type Props = {
   value: SortSelection;

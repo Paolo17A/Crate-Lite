@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { categories, performers } from "@/data/performers";
+import { performers } from "@/data/performers";
+import { categories } from "@/lib/performers";
 import CategoryRow from "@/components/home/CategoryRow";
 
 export default function PerformerDirectory() {

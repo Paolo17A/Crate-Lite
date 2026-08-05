@@ -3,11 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProfileMainPanels from "@/components/performer/ProfileMainPanels";
 import RelatedPerformers from "@/components/performer/RelatedPerformers";
+import { performers } from "@/data/performers";
 import {
   getPerformerById,
   getRelatedPerformers,
-  performers,
-} from "@/data/performers";
+} from "@/lib/performers";
 import { formatPeso } from "@/lib/format";
 
 type Props = {
