@@ -3,6 +3,8 @@
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AvailabilityCalendar from "@/components/shared/AvailabilityCalendar";
+import { isDateSelectable } from "@/lib/availability";
 import type { Performer } from "@/types/performer";
 
 type Props = {
@@ -74,24 +76,35 @@ function BookingSuccess({ performerName }: { performerName: string }) {
 
 export default function BookingForm({ performer }: Props) {
   const [submitted, setSubmitted] = useState(false);
+  const [eventDate, setEventDate] = useState("");
+  const [dateError, setDateError] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [timeError, setTimeError] = useState("");
-  const now = new Date();
-  const today = [
-    now.getFullYear(),
-    String(now.getMonth() + 1).padStart(2, "0"),
-    String(now.getDate()).padStart(2, "0"),
-  ].join("-");
+
+  function validateDate(value: string): string {
+    if (!value) return "Please select an event date.";
+    if (!isDateSelectable(performer, value)) {
+      return "That date is unavailable. Check availability and choose another.";
+    }
+    return "";
+  }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const nextDateError = validateDate(eventDate);
+    if (nextDateError) {
+      setDateError(nextDateError);
+      return;
+    }
 
     if (startTime && endTime && endTime <= startTime) {
       setTimeError("End time must be after start time.");
       return;
     }
 
+    setDateError("");
     setTimeError("");
     setSubmitted(true);
   }
@@ -102,18 +115,39 @@ export default function BookingForm({ performer }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <label className="block">
-        <span className={labelClass}>Event Date</span>
-        <input
-          type="date"
-          name="eventDate"
-          required
-          min={today}
-          className={fieldClass}
-        />
-      </label>
-      <div className="space-y-2">
-        <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-2 sm:items-stretch">
+        <div className="flex h-full flex-col">
+          <span className={labelClass}>Event Date</span>
+          <input type="hidden" name="eventDate" value={eventDate} required />
+          <div className="mt-1 flex flex-1 justify-center rounded border border-stone bg-white p-3">
+            <AvailabilityCalendar
+              mode="pick"
+              size="compact"
+              performer={performer}
+              value={eventDate}
+              onChange={(dateKey) => {
+                setEventDate(dateKey);
+                setDateError("");
+              }}
+            />
+          </div>
+          {eventDate && !dateError && (
+            <p className="mt-2 text-center text-sm text-espresso/70">
+              Selected:{" "}
+              <span className="font-medium text-espresso">{eventDate}</span>
+            </p>
+          )}
+          {dateError && (
+            <p
+              className="mt-2 text-center text-sm font-medium text-burnt-orange"
+              role="alert"
+            >
+              {dateError}
+            </p>
+          )}
+        </div>
+
+        <div className="flex h-full flex-col space-y-5">
           <label className="block">
             <span className={labelClass}>Start Time</span>
             <input
@@ -143,36 +177,42 @@ export default function BookingForm({ performer }: Props) {
               className={fieldClass}
             />
           </label>
+          {timeError && (
+            <p className="text-sm font-medium text-burnt-orange" role="alert">
+              {timeError}
+            </p>
+          )}
+          <label className="block">
+            <span className={labelClass}>Event Type</span>
+            <select
+              name="eventType"
+              required
+              className={fieldClass}
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Select event type
+              </option>
+              {eventTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            <span className={labelClass}>Event Location</span>
+            <input
+              type="text"
+              name="eventLocation"
+              required
+              placeholder="Venue or address"
+              className={fieldClass}
+            />
+          </label>
         </div>
-        {timeError && (
-          <p className="text-sm font-medium text-burnt-orange" role="alert">
-            {timeError}
-          </p>
-        )}
       </div>
-      <label className="block">
-        <span className={labelClass}>Event Location</span>
-        <input
-          type="text"
-          name="eventLocation"
-          required
-          placeholder="Venue or address"
-          className={fieldClass}
-        />
-      </label>
-      <label className="block">
-        <span className={labelClass}>Event Type</span>
-        <select name="eventType" required className={fieldClass} defaultValue="">
-          <option value="" disabled>
-            Select event type
-          </option>
-          {eventTypes.map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
-      </label>
+
       <label className="block">
         <span className={labelClass}>Additional Notes</span>
         <textarea

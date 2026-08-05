@@ -1,3 +1,4 @@
+import { bookedDatesForId } from "@/lib/availability";
 import type { GalleryItem, Performer } from "@/types/performer";
 
 function galleryFrom(
@@ -59,7 +60,7 @@ const galleryC = [
   "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&h=600&fit=crop",
 ];
 
-export const performers: Performer[] = [
+const performerCatalog: Omit<Performer, "bookedDates">[] = [
   // —— Musicians ——
   {
     id: "moira-dela-torre",
@@ -788,6 +789,11 @@ export const performers: Performer[] = [
     ]),
   },
 ];
+
+export const performers: Performer[] = performerCatalog.map((performer) => ({
+  ...performer,
+  bookedDates: bookedDatesForId(performer.id),
+}));
 
 export function getPerformerById(id: string): Performer | undefined {
   return performers.find((p) => p.id === id);

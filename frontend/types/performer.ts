@@ -24,4 +24,6 @@ export type Performer = {
   coverUrl: string;
   biography: string;
   gallery: GalleryItem[];
+  /** ISO date keys (YYYY-MM-DD) already booked */
+  bookedDates: string[];
 };

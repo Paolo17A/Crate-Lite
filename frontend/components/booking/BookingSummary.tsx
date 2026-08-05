@@ -51,7 +51,7 @@ export default function BookingSummary({ performer }: Props) {
 
       <div className="mt-5 border-t border-stone pt-4">
         <div className="flex items-baseline justify-between gap-3">
-          <span className="text-sm text-espresso/60">Rate</span>
+          <span className="text-sm text-espresso/60">Talent Fee</span>
           <span className="text-xl font-medium text-espresso">
             {formatPeso(performer.price)}
           </span>
