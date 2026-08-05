@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
@@ -38,7 +39,7 @@ export default function SearchBar({ id, compact = false }: Props) {
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search performers by name…"
+        placeholder="Search for performers…"
         className={
           compact
             ? "w-full rounded border border-stone bg-white py-2.5 pl-5 pr-14 text-base text-espresso outline-none transition placeholder:text-espresso/50 focus:border-burnt-orange focus:ring-2 focus:ring-burnt-orange/30"

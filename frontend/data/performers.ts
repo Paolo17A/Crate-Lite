@@ -567,6 +567,7 @@ export type PerformerSearchFilters = {
   query?: string;
   categories?: string[];
   locations?: string[];
+  genres?: string[];
   minPrice?: number;
   maxPrice?: number;
 };
@@ -575,16 +576,19 @@ export function searchPerformers({
   query = "",
   categories = [],
   locations = [],
+  genres = [],
   minPrice,
   maxPrice,
 }: PerformerSearchFilters = {}) {
   const q = query.trim().toLowerCase();
   const cats = categories.map((c) => c.trim()).filter(Boolean);
   const locs = locations.map((l) => l.trim()).filter(Boolean);
+  const gens = genres.map((g) => g.trim()).filter(Boolean);
 
   return performers.filter((p) => {
     if (cats.length > 0 && !cats.includes(p.category)) return false;
     if (locs.length > 0 && !locs.includes(p.location)) return false;
+    if (gens.length > 0 && !gens.some((g) => p.genres.includes(g))) return false;
     if (minPrice !== undefined && p.price < minPrice) return false;
     if (maxPrice !== undefined && p.price > maxPrice) return false;
 

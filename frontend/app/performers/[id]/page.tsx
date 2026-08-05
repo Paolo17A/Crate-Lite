@@ -31,7 +31,7 @@ export default async function PerformerProfilePage({ params }: Props) {
   return (
     <article className="bg-parchment font-performer">
       {/* Full-bleed cover */}
-      <div className="relative h-[10vh] w-full overflow-hidden bg-espresso lg:h-[60vh]">
+      <div className="relative h-[30vh] w-full overflow-hidden bg-espresso landscape:h-[50vh]">
         <Image
           src={performer.coverUrl}
           alt={`${performer.name} cover`}

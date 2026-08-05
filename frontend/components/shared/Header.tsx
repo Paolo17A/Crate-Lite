@@ -16,26 +16,20 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-sand/95 shadow-sm backdrop-blur-sm">
-      <div className="relative">
+      <div className="mx-auto flex max-w-7xl items-center gap-3 px-3 py-3 sm:gap-5 sm:px-6 sm:py-3.5 lg:px-10">
         {bookingPerformerId && (
           <Link
             href={`/performers/${bookingPerformerId}`}
-            className="absolute top-0 bottom-0 left-0 z-10 flex items-center px-3 text-sm font-medium text-burnt-orange transition-opacity hover:opacity-80 sm:px-4"
+            className="shrink-0 text-sm font-medium text-burnt-orange transition-opacity hover:opacity-80"
             aria-label="Go back"
           >
             <span aria-hidden="true">←</span>
             <span className="ml-1.5 hidden sm:inline">Go Back</span>
           </Link>
         )}
-        <div
-          className={`mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:gap-6 sm:px-6 sm:py-3.5 lg:px-10 ${
-            bookingPerformerId ? "pl-10 sm:pl-28" : ""
-          }`}
-        >
-          <CrateLogo priority />
-          <div className="min-w-0 flex-1">
-            <SearchBar id="nav-search" compact />
-          </div>
+        <CrateLogo priority />
+        <div className="min-w-0 flex-1">
+          <SearchBar id="nav-search" compact />
         </div>
       </div>
     </header>

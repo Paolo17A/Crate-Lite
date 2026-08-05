@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import {
+  allGenres,
   budgetRanges,
   categories,
   locations,
@@ -10,12 +11,16 @@ import {
 export type FilterSelection = {
   categories: string[];
   locations: string[];
+  genres: string[];
   budgetId: string;
 };
 
 type Props = {
   applied: FilterSelection;
   onApply: (next: FilterSelection) => void;
+  /** Render panel content inline (no Filters button). */
+  embedded?: boolean;
+  onClose?: () => void;
 };
 
 function toggleValue(list: string[], value: string) {
@@ -28,27 +33,209 @@ function countActive(filters: FilterSelection) {
   return (
     filters.categories.length +
     filters.locations.length +
+    filters.genres.length +
     (filters.budgetId !== "any" ? 1 : 0)
   );
 }
 
-export default function SearchFilters({ applied, onApply }: Props) {
+function FilterPanelBody({
+  draft,
+  setDraft,
+  draftCount,
+  onClear,
+  onCancel,
+  onApply,
+  budgetName,
+}: {
+  draft: FilterSelection;
+  setDraft: Dispatch<SetStateAction<FilterSelection>>;
+  draftCount: number;
+  onClear: () => void;
+  onCancel: () => void;
+  onApply: () => void;
+  budgetName: string;
+}) {
+  return (
+    <>
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <p className="text-sm font-medium text-espresso">Filter by</p>
+        {draftCount > 0 && (
+          <button
+            type="button"
+            onClick={onClear}
+            className="text-sm font-medium text-burnt-orange underline underline-offset-4 transition-opacity hover:opacity-80"
+          >
+            Clear all
+          </button>
+        )}
+      </div>
+
+      <div className="max-h-[min(70vh,28rem)] space-y-6 overflow-y-auto pr-1">
+        <section>
+          <h3 className="text-xs font-medium uppercase tracking-wide text-espresso/55">
+            Budget
+          </h3>
+          <ul className="mt-3 space-y-2.5">
+            {budgetRanges.map((range) => (
+              <li key={range.id}>
+                <label className="flex cursor-pointer items-center gap-2.5 text-sm text-espresso">
+                  <input
+                    type="radio"
+                    name={budgetName}
+                    checked={draft.budgetId === range.id}
+                    onChange={() =>
+                      setDraft((current) => ({
+                        ...current,
+                        budgetId: range.id,
+                      }))
+                    }
+                    className="h-4 w-4 accent-burnt-orange"
+                  />
+                  <span>{range.label}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section>
+          <h3 className="text-xs font-medium uppercase tracking-wide text-espresso/55">
+            Location
+          </h3>
+          <ul className="mt-3 space-y-2.5">
+            {locations.map((location) => {
+              const checked = draft.locations.includes(location);
+              return (
+                <li key={location}>
+                  <label className="flex cursor-pointer items-center gap-2.5 text-sm text-espresso">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() =>
+                        setDraft((current) => ({
+                          ...current,
+                          locations: toggleValue(current.locations, location),
+                        }))
+                      }
+                      className="h-4 w-4 accent-burnt-orange"
+                    />
+                    <span>{location}</span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
+        <section>
+          <h3 className="text-xs font-medium uppercase tracking-wide text-espresso/55">
+            Category
+          </h3>
+          <ul className="mt-3 space-y-2.5">
+            {categories.map((category) => {
+              const checked = draft.categories.includes(category);
+              return (
+                <li key={category}>
+                  <label className="flex cursor-pointer items-center gap-2.5 text-sm text-espresso">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() =>
+                        setDraft((current) => ({
+                          ...current,
+                          categories: toggleValue(current.categories, category),
+                        }))
+                      }
+                      className="h-4 w-4 accent-burnt-orange"
+                    />
+                    <span>
+                      {category === "DJ"
+                        ? "DJs"
+                        : category === "Other"
+                          ? "Other"
+                          : `${category}s`}
+                    </span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
+        <section>
+          <h3 className="text-xs font-medium uppercase tracking-wide text-espresso/55">
+            Genre
+          </h3>
+          <ul className="mt-3 space-y-2.5">
+            {allGenres.map((genre) => {
+              const checked = draft.genres.includes(genre);
+              return (
+                <li key={genre}>
+                  <label className="flex cursor-pointer items-center gap-2.5 text-sm text-espresso">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() =>
+                        setDraft((current) => ({
+                          ...current,
+                          genres: toggleValue(current.genres, genre),
+                        }))
+                      }
+                      className="h-4 w-4 accent-burnt-orange"
+                    />
+                    <span>{genre}</span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      </div>
+
+      <div className="mt-5 flex gap-2 border-t border-stone pt-4">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="flex-1 rounded border border-stone px-4 py-2.5 text-sm font-medium text-espresso transition-colors hover:border-espresso/40"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          onClick={onApply}
+          className="flex-1 rounded bg-burnt-orange px-4 py-2.5 text-sm font-medium text-sand transition-colors hover:bg-burnt-orange/90"
+        >
+          Apply
+        </button>
+      </div>
+    </>
+  );
+}
+
+export default function SearchFilters({
+  applied,
+  onApply,
+  embedded = false,
+  onClose,
+}: Props) {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<FilterSelection>(applied);
   const rootRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
+  const budgetName = useId();
 
   const appliedCount = countActive(applied);
   const draftCount = countActive(draft);
+  const panelVisible = embedded || open;
 
   useEffect(() => {
-    if (open) {
+    if (panelVisible) {
       setDraft(applied);
     }
-  }, [open, applied]);
+  }, [panelVisible, applied]);
 
   useEffect(() => {
-    if (!open) return;
+    if (embedded || !open) return;
 
     const onPointerDown = (e: MouseEvent) => {
       if (!rootRef.current?.contains(e.target as Node)) {
@@ -66,19 +253,43 @@ export default function SearchFilters({ applied, onApply }: Props) {
       document.removeEventListener("mousedown", onPointerDown);
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [open]);
+  }, [embedded, open]);
 
   function handleApply() {
     onApply(draft);
     setOpen(false);
+    onClose?.();
+  }
+
+  function handleCancel() {
+    setDraft(applied);
+    setOpen(false);
+    onClose?.();
   }
 
   function handleClearDraft() {
     setDraft({
       categories: [],
       locations: [],
+      genres: [],
       budgetId: "any",
     });
+  }
+
+  if (embedded) {
+    return (
+      <div className="font-performer">
+        <FilterPanelBody
+          draft={draft}
+          setDraft={setDraft}
+          draftCount={draftCount}
+          onClear={handleClearDraft}
+          onCancel={handleCancel}
+          onApply={handleApply}
+          budgetName={`${budgetName}-embedded`}
+        />
+      </div>
+    );
   }
 
   return (
@@ -117,134 +328,15 @@ export default function SearchFilters({ applied, onApply }: Props) {
           aria-label="Search filters"
           className="absolute right-0 z-30 mt-2 w-[min(calc(100vw-3rem),22rem)] rounded-lg border border-stone bg-sand p-5 shadow-lg sm:p-6"
         >
-          <div className="mb-5 flex items-center justify-between gap-3">
-            <p className="text-sm font-medium text-espresso">Filter by</p>
-            {draftCount > 0 && (
-              <button
-                type="button"
-                onClick={handleClearDraft}
-                className="text-sm font-medium text-burnt-orange underline underline-offset-4 transition-opacity hover:opacity-80"
-              >
-                Clear all
-              </button>
-            )}
-          </div>
-
-          <div className="max-h-[min(70vh,28rem)] space-y-6 overflow-y-auto pr-1">
-            <section>
-              <h3 className="text-xs font-medium uppercase tracking-wide text-espresso/55">
-                Category
-              </h3>
-              <ul className="mt-3 space-y-2.5">
-                {categories.map((category) => {
-                  const checked = draft.categories.includes(category);
-                  return (
-                    <li key={category}>
-                      <label className="flex cursor-pointer items-center gap-2.5 text-sm text-espresso">
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() =>
-                            setDraft((current) => ({
-                              ...current,
-                              categories: toggleValue(
-                                current.categories,
-                                category,
-                              ),
-                            }))
-                          }
-                          className="h-4 w-4 accent-burnt-orange"
-                        />
-                        <span>
-                          {category === "DJ"
-                            ? "DJs"
-                            : category === "Other"
-                              ? "Other"
-                              : `${category}s`}
-                        </span>
-                      </label>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-
-            <section>
-              <h3 className="text-xs font-medium uppercase tracking-wide text-espresso/55">
-                Location
-              </h3>
-              <ul className="mt-3 space-y-2.5">
-                {locations.map((location) => {
-                  const checked = draft.locations.includes(location);
-                  return (
-                    <li key={location}>
-                      <label className="flex cursor-pointer items-center gap-2.5 text-sm text-espresso">
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() =>
-                            setDraft((current) => ({
-                              ...current,
-                              locations: toggleValue(
-                                current.locations,
-                                location,
-                              ),
-                            }))
-                          }
-                          className="h-4 w-4 accent-burnt-orange"
-                        />
-                        <span>{location}</span>
-                      </label>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-
-            <section>
-              <h3 className="text-xs font-medium uppercase tracking-wide text-espresso/55">
-                Budget
-              </h3>
-              <ul className="mt-3 space-y-2.5">
-                {budgetRanges.map((range) => (
-                  <li key={range.id}>
-                    <label className="flex cursor-pointer items-center gap-2.5 text-sm text-espresso">
-                      <input
-                        type="radio"
-                        name="budget-draft"
-                        checked={draft.budgetId === range.id}
-                        onChange={() =>
-                          setDraft((current) => ({
-                            ...current,
-                            budgetId: range.id,
-                          }))
-                        }
-                        className="h-4 w-4 accent-burnt-orange"
-                      />
-                      <span>{range.label}</span>
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          </div>
-
-          <div className="mt-5 flex gap-2 border-t border-stone pt-4">
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              className="flex-1 rounded border border-stone px-4 py-2.5 text-sm font-medium text-espresso transition-colors hover:border-espresso/40"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleApply}
-              className="flex-1 rounded bg-burnt-orange px-4 py-2.5 text-sm font-medium text-sand transition-colors hover:bg-burnt-orange/90"
-            >
-              Apply
-            </button>
-          </div>
+          <FilterPanelBody
+            draft={draft}
+            setDraft={setDraft}
+            draftCount={draftCount}
+            onClear={handleClearDraft}
+            onCancel={handleCancel}
+            onApply={handleApply}
+            budgetName={`${budgetName}-dropdown`}
+          />
         </div>
       )}
     </div>

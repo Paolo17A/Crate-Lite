@@ -6,6 +6,7 @@ type Props = {
     q?: string;
     category?: string | string[];
     location?: string | string[];
+    genre?: string | string[];
     budget?: string;
   }>;
 };
@@ -23,6 +24,7 @@ export default async function SearchPage({ searchParams }: Props) {
   const q = params.q ?? "";
   const categories = toArray(params.category);
   const locations = toArray(params.location);
+  const genres = toArray(params.genre);
   const budget =
     budgetRanges.some((range) => range.id === params.budget) && params.budget
       ? params.budget
@@ -31,10 +33,11 @@ export default async function SearchPage({ searchParams }: Props) {
   return (
     <div className="flex min-h-full flex-1 flex-col bg-parchment">
       <SearchResults
-        key={`${q}-${categories.join(",")}-${locations.join(",")}-${budget}`}
+        key={`${q}-${categories.join(",")}-${locations.join(",")}-${genres.join(",")}-${budget}`}
         initialQuery={q}
         initialCategories={categories}
         initialLocations={locations}
+        initialGenres={genres}
         initialBudget={budget}
       />
     </div>

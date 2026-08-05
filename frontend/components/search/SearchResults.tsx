@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import PerformerCard from "@/components/shared/PerformerCard";
 import SearchFilters from "@/components/search/SearchFilters";
@@ -13,6 +13,7 @@ type Props = {
   initialQuery: string;
   initialCategories: string[];
   initialLocations: string[];
+  initialGenres: string[];
   initialBudget: string;
 };
 
@@ -30,15 +31,20 @@ export default function SearchResults({
   initialQuery,
   initialCategories,
   initialLocations,
+  initialGenres,
   initialBudget,
 }: Props) {
   const router = useRouter();
   const [selectedCategories, setSelectedCategories] =
     useState(initialCategories);
   const [selectedLocations, setSelectedLocations] = useState(initialLocations);
+  const [selectedGenres, setSelectedGenres] = useState(initialGenres);
   const [budgetId, setBudgetId] = useState(initialBudget);
   const [pageSize, setPageSize] = useState<(typeof PAGE_SIZES)[number]>(10);
   const [page, setPage] = useState(1);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isCompact, setIsCompact] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const { minPrice, maxPrice } = budgetFromId(budgetId);
 
@@ -48,6 +54,7 @@ export default function SearchResults({
         query: initialQuery,
         categories: selectedCategories,
         locations: selectedLocations,
+        genres: selectedGenres,
         minPrice,
         maxPrice,
       }),
@@ -55,6 +62,7 @@ export default function SearchResults({
       initialQuery,
       selectedCategories,
       selectedLocations,
+      selectedGenres,
       minPrice,
       maxPrice,
     ],
@@ -63,11 +71,23 @@ export default function SearchResults({
   const totalPages = Math.max(1, Math.ceil(results.length / pageSize));
 
   useEffect(() => {
+    const media = window.matchMedia("(max-width: 639px)");
+    const sync = () => {
+      setIsCompact(media.matches);
+      if (!media.matches) setMenuOpen(false);
+    };
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
     setPage(1);
   }, [
     initialQuery,
     selectedCategories,
     selectedLocations,
+    selectedGenres,
     budgetId,
     pageSize,
   ]);
@@ -75,6 +95,27 @@ export default function SearchResults({
   useEffect(() => {
     if (page > totalPages) setPage(totalPages);
   }, [page, totalPages]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const onPointerDown = (e: MouseEvent) => {
+      if (!menuRef.current?.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+
+    document.addEventListener("mousedown", onPointerDown);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
 
   const pageResults = useMemo(() => {
     const start = (page - 1) * pageSize;
@@ -84,6 +125,7 @@ export default function SearchResults({
   function syncUrl(next: {
     categories: string[];
     locations: string[];
+    genres: string[];
     budgetId: string;
   }) {
     const params = new URLSearchParams();
@@ -92,6 +134,7 @@ export default function SearchResults({
     if (q) params.set("q", q);
     for (const cat of next.categories) params.append("category", cat);
     for (const loc of next.locations) params.append("location", loc);
+    for (const genre of next.genres) params.append("genre", genre);
     if (next.budgetId && next.budgetId !== "any") {
       params.set("budget", next.budgetId);
     }
@@ -103,10 +146,12 @@ export default function SearchResults({
   function handleApplyFilters(next: {
     categories: string[];
     locations: string[];
+    genres: string[];
     budgetId: string;
   }) {
     setSelectedCategories(next.categories);
     setSelectedLocations(next.locations);
+    setSelectedGenres(next.genres);
     setBudgetId(next.budgetId);
     syncUrl(next);
   }
@@ -127,42 +172,102 @@ export default function SearchResults({
 
   const rangeStart = count === 0 ? 0 : (page - 1) * pageSize + 1;
   const rangeEnd = Math.min(page * pageSize, count);
+  const appliedFilterCount =
+    selectedCategories.length +
+    selectedLocations.length +
+    selectedGenres.length +
+    (budgetId !== "any" ? 1 : 0);
+
+  const pageSizeControl = (
+    <label className="inline-flex items-center gap-2 text-sm text-espresso">
+      <span className="text-espresso/60">Show</span>
+      <select
+        value={pageSize}
+        onChange={(e) =>
+          setPageSize(Number(e.target.value) as (typeof PAGE_SIZES)[number])
+        }
+        className="rounded border border-burnt-orange bg-sand px-3 py-2.5 text-sm text-espresso outline-none transition focus:border-burnt-orange focus:ring-2 focus:ring-burnt-orange/30"
+      >
+        {PAGE_SIZES.map((size) => (
+          <option key={size} value={size}>
+            {size}
+          </option>
+        ))}
+      </select>
+      <span className="text-espresso/60">per page</span>
+    </label>
+  );
+
+  const filtersControl = (
+    <SearchFilters
+      applied={{
+        categories: selectedCategories,
+        locations: selectedLocations,
+        genres: selectedGenres,
+        budgetId,
+      }}
+      onApply={handleApplyFilters}
+    />
+  );
+
+  const embeddedFilters = (
+    <SearchFilters
+      embedded
+      applied={{
+        categories: selectedCategories,
+        locations: selectedLocations,
+        genres: selectedGenres,
+        budgetId,
+      }}
+      onApply={handleApplyFilters}
+      onClose={() => setMenuOpen(false)}
+    />
+  );
 
   return (
     <div className="flex w-full flex-1 flex-col bg-parchment px-6 py-8 font-performer sm:px-10 sm:py-10 lg:px-16">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-medium text-espresso sm:text-3xl">
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="min-w-0 text-2xl font-medium text-espresso sm:text-3xl">
           {heading}
         </h1>
 
-        <div className="flex flex-wrap items-center gap-3 sm:gap-6">
-          <SearchFilters
-            applied={{
-              categories: selectedCategories,
-              locations: selectedLocations,
-              budgetId,
-            }}
-            onApply={handleApplyFilters}
-          />
-
-          <label className="inline-flex items-center gap-2 text-sm text-espresso">
-            <span className="text-espresso/60">Show</span>
-            <select
-              value={pageSize}
-              onChange={(e) =>
-                setPageSize(Number(e.target.value) as (typeof PAGE_SIZES)[number])
-              }
-              className="rounded border border-burnt-orange bg-sand px-3 py-2.5 text-sm text-espresso outline-none transition focus:border-burnt-orange focus:ring-2 focus:ring-burnt-orange/30"
+        {!isCompact ? (
+          <div className="flex items-center gap-6">
+            {filtersControl}
+            {pageSizeControl}
+          </div>
+        ) : (
+          <div ref={menuRef} className="relative shrink-0">
+            <button
+              type="button"
+              aria-expanded={menuOpen}
+              aria-label="Open search options"
+              onClick={() => setMenuOpen((open) => !open)}
+              className="relative flex h-10 w-10 items-center justify-center rounded border border-burnt-orange bg-burnt-orange text-sand transition-colors hover:bg-burnt-orange/90"
             >
-              {PAGE_SIZES.map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </select>
-            <span className="text-espresso/60">per page</span>
-          </label>
-        </div>
+              <span className="sr-only">Menu</span>
+              <span className="flex flex-col gap-1.5" aria-hidden="true">
+                <span className="block h-0.5 w-5 rounded-full bg-sand" />
+                <span className="block h-0.5 w-5 rounded-full bg-sand" />
+                <span className="block h-0.5 w-5 rounded-full bg-sand" />
+              </span>
+              {appliedFilterCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-sand px-1 text-xs font-medium text-burnt-orange">
+                  {appliedFilterCount}
+                </span>
+              )}
+            </button>
+
+            {menuOpen && (
+              <div className="absolute right-0 z-30 mt-2 w-[min(100vw-2rem,22rem)] rounded-lg border border-stone bg-sand p-4 shadow-lg sm:p-5">
+                {embeddedFilters}
+                <div className="mt-4 border-t border-stone pt-4">
+                  {pageSizeControl}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {results.length === 0 ? (

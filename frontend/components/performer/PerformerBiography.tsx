@@ -69,7 +69,7 @@ export default function PerformerBiography({
         </h2>
         <p
           ref={textRef}
-          className={`mt-4 leading-relaxed text-espresso/80 ${
+          className={`mt-4 text-justify leading-relaxed text-espresso/80 ${
             fillAvailable
               ? "min-h-0 flex-1 overflow-hidden max-lg:line-clamp-3 max-lg:flex-none"
               : "line-clamp-3"
@@ -112,7 +112,7 @@ export default function PerformerBiography({
               <h2 className="pr-12 text-2xl font-medium text-espresso">
                 Biography
               </h2>
-              <p className="mt-4 leading-relaxed whitespace-pre-wrap text-espresso/80">
+              <p className="mt-4 text-justify leading-relaxed whitespace-pre-wrap text-espresso/80">
                 {biography}
               </p>
             </div>

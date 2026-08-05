@@ -10,12 +10,7 @@ export default function PerformerDirectory() {
       categories
         .map((cat) => ({
           category: cat,
-          title:
-            cat === "DJ"
-              ? "DJs"
-              : cat === "Other"
-                ? "Others"
-                : `${cat}s`,
+          title: `${cat}s`,
           performers: performers.filter((p) => p.category === cat),
         }))
         .filter((row) => row.performers.length > 0),
