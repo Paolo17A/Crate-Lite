@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-espresso: #2b2623;
+  --color-sand: #f4efe6;
+  --color-parchment: #e6d7c3;
+  --color-burnt-orange: #c76b3c;
+  --color-stone: #c8c2b8;
+  --font-brand: "Proxima Nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-headline: var(--font-playfair), "Playfair Display", Georgia, serif;
+  --font-performer: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--color-parchment);
+  color: var(--color-espresso);
+  font-family: var(--font-performer);
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #c76b3c transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #c76b3c;
+  border-radius: 9999px;
+}
+
+/* Instax-style photo print */
+.instax-print {
+  border: 1px solid #b0aaa0;
+  border-radius: 2px;
+  box-shadow: 4px 6px 14px rgba(43, 38, 35, 0.22);
+}
+
+.instax-print img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+@keyframes countdownPop {
+  from {
+    opacity: 0.35;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
