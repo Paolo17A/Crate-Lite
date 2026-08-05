@@ -131,12 +131,6 @@ export default function BookingForm({ performer }: Props) {
               }}
             />
           </div>
-          {eventDate && !dateError && (
-            <p className="mt-2 text-center text-sm text-espresso/70">
-              Selected:{" "}
-              <span className="font-medium text-espresso">{eventDate}</span>
-            </p>
-          )}
           {dateError && (
             <p
               className="mt-2 text-center text-sm font-medium text-burnt-orange"

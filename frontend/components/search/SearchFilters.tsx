@@ -46,6 +46,8 @@ function FilterPanelBody({
   onCancel,
   onApply,
   budgetName,
+  showTitle = true,
+  scrollable = true,
 }: {
   draft: FilterSelection;
   setDraft: Dispatch<SetStateAction<FilterSelection>>;
@@ -54,23 +56,37 @@ function FilterPanelBody({
   onCancel: () => void;
   onApply: () => void;
   budgetName: string;
+  showTitle?: boolean;
+  scrollable?: boolean;
 }) {
   return (
     <>
-      <div className="mb-5 flex items-center justify-between gap-3">
-        <p className="text-sm font-medium text-espresso">Filter by</p>
-        {draftCount > 0 && (
-          <button
-            type="button"
-            onClick={onClear}
-            className="text-sm font-medium text-burnt-orange underline underline-offset-4 transition-opacity hover:opacity-80"
-          >
-            Clear all
-          </button>
-        )}
-      </div>
+      {(showTitle || draftCount > 0) && (
+        <div
+          className={`mb-5 flex items-center gap-3 ${
+            showTitle ? "justify-between" : "justify-end"
+          }`}
+        >
+          {showTitle && (
+            <p className="text-sm font-medium text-espresso">Filter by</p>
+          )}
+          {draftCount > 0 && (
+            <button
+              type="button"
+              onClick={onClear}
+              className="text-sm font-medium text-burnt-orange underline underline-offset-4 transition-opacity hover:opacity-80"
+            >
+              Clear all
+            </button>
+          )}
+        </div>
+      )}
 
-      <div className="max-h-[min(70vh,28rem)] space-y-6 overflow-y-auto pr-1">
+      <div
+        className={`space-y-6 pr-1 ${
+          scrollable ? "max-h-[min(70vh,28rem)] overflow-y-auto" : ""
+        }`}
+      >
         <section>
           <h3 className="text-xs font-medium uppercase tracking-wide text-espresso/55">
             Budget
@@ -287,6 +303,8 @@ export default function SearchFilters({
           onCancel={handleCancel}
           onApply={handleApply}
           budgetName={`${budgetName}-embedded`}
+          showTitle={false}
+          scrollable={false}
         />
       </div>
     );

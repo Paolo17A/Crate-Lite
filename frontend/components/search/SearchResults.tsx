@@ -4,10 +4,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import PerformerCard from "@/components/shared/PerformerCard";
 import SearchFilters from "@/components/search/SearchFilters";
+import SearchSort, {
+  type SortSelection,
+} from "@/components/search/SearchSort";
 import {
   budgetRanges,
   searchPerformers,
 } from "@/data/performers";
+import type { Performer } from "@/types/performer";
 
 type Props = {
   initialQuery: string;
@@ -27,6 +31,23 @@ function budgetFromId(budgetId: string) {
   };
 }
 
+function sortPerformers(list: Performer[], sort: SortSelection): Performer[] {
+  const sorted = [...list];
+  const direction = sort.direction === "asc" ? 1 : -1;
+
+  sorted.sort((a, b) => {
+    if (sort.field === "name") {
+      return a.name.localeCompare(b.name, undefined, { sensitivity: "base" }) * direction;
+    }
+    if (a.price !== b.price) {
+      return (a.price - b.price) * direction;
+    }
+    return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+  });
+
+  return sorted;
+}
+
 export default function SearchResults({
   initialQuery,
   initialCategories,
@@ -42,31 +63,35 @@ export default function SearchResults({
   const [budgetId, setBudgetId] = useState(initialBudget);
   const [pageSize, setPageSize] = useState<(typeof PAGE_SIZES)[number]>(10);
   const [page, setPage] = useState(1);
+  const [sort, setSort] = useState<SortSelection>({
+    field: "name",
+    direction: "asc",
+  });
   const [menuOpen, setMenuOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const { minPrice, maxPrice } = budgetFromId(budgetId);
 
-  const results = useMemo(
-    () =>
-      searchPerformers({
-        query: initialQuery,
-        categories: selectedCategories,
-        locations: selectedLocations,
-        genres: selectedGenres,
-        minPrice,
-        maxPrice,
-      }),
-    [
-      initialQuery,
-      selectedCategories,
-      selectedLocations,
-      selectedGenres,
+  const results = useMemo(() => {
+    const matched = searchPerformers({
+      query: initialQuery,
+      categories: selectedCategories,
+      locations: selectedLocations,
+      genres: selectedGenres,
       minPrice,
       maxPrice,
-    ],
-  );
+    });
+    return sortPerformers(matched, sort);
+  }, [
+    initialQuery,
+    selectedCategories,
+    selectedLocations,
+    selectedGenres,
+    minPrice,
+    maxPrice,
+    sort,
+  ]);
 
   const totalPages = Math.max(1, Math.ceil(results.length / pageSize));
 
@@ -90,6 +115,7 @@ export default function SearchResults({
     selectedGenres,
     budgetId,
     pageSize,
+    sort,
   ]);
 
   useEffect(() => {
@@ -198,6 +224,10 @@ export default function SearchResults({
     </label>
   );
 
+  const sortControl = (
+    <SearchSort value={sort} onChange={setSort} />
+  );
+
   const filtersControl = (
     <SearchFilters
       applied={{
@@ -208,6 +238,10 @@ export default function SearchResults({
       }}
       onApply={handleApplyFilters}
     />
+  );
+
+  const embeddedSort = (
+    <SearchSort value={sort} onChange={setSort} embedded />
   );
 
   const embeddedFilters = (
@@ -233,6 +267,7 @@ export default function SearchResults({
 
         {!isCompact ? (
           <div className="flex items-center gap-6">
+            {sortControl}
             {filtersControl}
             {pageSizeControl}
           </div>
@@ -259,8 +294,11 @@ export default function SearchResults({
             </button>
 
             {menuOpen && (
-              <div className="absolute right-0 z-30 mt-2 w-[min(100vw-2rem,22rem)] rounded-lg border border-stone bg-sand p-4 shadow-lg sm:p-5">
-                {embeddedFilters}
+              <div className="absolute right-0 z-30 mt-2 max-h-[min(80vh,40rem)] w-[min(100vw-2rem,22rem)] overflow-y-auto rounded-lg border border-stone bg-sand p-4 shadow-lg sm:p-5">
+                {embeddedSort}
+                <div className="mt-4 border-t border-stone pt-4">
+                  {embeddedFilters}
+                </div>
                 <div className="mt-4 border-t border-stone pt-4">
                   {pageSizeControl}
                 </div>
