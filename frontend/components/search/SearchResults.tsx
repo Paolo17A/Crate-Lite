@@ -56,7 +56,7 @@ export default function SearchResults({
 
   return (
     <div className="flex w-full flex-1 flex-col bg-parchment px-6 py-8 font-performer sm:px-10 sm:py-10 lg:px-16">
-      <div className="flex items-center justify-between gap-3">
+      <div className="relative z-20 flex items-center justify-between gap-3">
         <h1 className="min-w-0 text-2xl font-medium text-espresso sm:text-3xl">
           {heading}
         </h1>

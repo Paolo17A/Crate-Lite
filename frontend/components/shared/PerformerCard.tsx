@@ -9,7 +9,7 @@ type Props = {
 
 export default function PerformerCard({ performer }: Props) {
   return (
-    <article className="instax-print group relative bg-[#faf7f2] transition-transform duration-300 hover:-translate-y-1.5">
+    <article className="instax-print group relative isolate bg-[#faf7f2] transition-transform duration-300 hover:-translate-y-1.5">
       {/* Glossy paper sheen across the print */}
       <div
         className="pointer-events-none absolute inset-0 z-20 bg-[linear-gradient(135deg,rgba(255,255,255,0.55)_0%,rgba(255,255,255,0.12)_28%,rgba(255,255,255,0)_48%,rgba(255,255,255,0.08)_72%,rgba(255,255,255,0.2)_100%)]"
@@ -55,7 +55,7 @@ export default function PerformerCard({ performer }: Props) {
         </div>
       </Link>
 
-      <div className="relative z-30 px-3 pb-3">
+      <div className="relative z-10 px-3 pb-3">
         <Link
           href={`/book/${performer.id}`}
           draggable={false}

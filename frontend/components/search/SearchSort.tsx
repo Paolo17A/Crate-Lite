@@ -167,7 +167,7 @@ export default function SearchSort({
           id={panelId}
           role="dialog"
           aria-label="Sort results"
-          className="absolute right-0 z-30 mt-2 w-[min(calc(100vw-3rem),16rem)] rounded-lg border border-stone bg-sand p-5 shadow-lg"
+          className="absolute right-0 z-50 mt-2 w-[min(calc(100vw-3rem),16rem)] isolate rounded-lg border border-stone bg-sand p-5 shadow-lg"
         >
           <SortPanelBody
             value={value}

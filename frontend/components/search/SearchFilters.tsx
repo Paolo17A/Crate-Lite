@@ -336,7 +336,7 @@ export default function SearchFilters({
           id={panelId}
           role="dialog"
           aria-label="Search filters"
-          className="absolute right-0 z-30 mt-2 w-[min(calc(100vw-3rem),22rem)] rounded-lg border border-stone bg-sand p-5 shadow-lg sm:p-6"
+          className="absolute right-0 z-50 mt-2 w-[min(calc(100vw-3rem),22rem)] isolate rounded-lg border border-stone bg-sand p-5 shadow-lg sm:p-6"
         >
           <FilterPanelBody
             draft={draft}

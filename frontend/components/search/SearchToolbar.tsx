@@ -104,7 +104,7 @@ export default function SearchToolbar({
       </button>
 
       {menuOpen && (
-        <div className="absolute right-0 z-30 mt-2 max-h-[min(80vh,40rem)] w-[min(100vw-2rem,22rem)] overflow-y-auto rounded-lg border border-stone bg-sand p-4 shadow-lg sm:p-5">
+        <div className="absolute right-0 z-50 mt-2 max-h-[min(80vh,40rem)] w-[min(100vw-2rem,22rem)] isolate overflow-y-auto rounded-lg border border-stone bg-sand p-4 shadow-lg sm:p-5">
           <SearchSort value={sort} onChange={onSortChange} embedded />
           <div className="mt-4 border-t border-stone pt-4">
             <SearchFilters
