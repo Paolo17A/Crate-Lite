@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import TextLink from "@/components/ui/TextLink";
 import { formatPeso } from "@/lib/format";
 import type { Performer } from "@/types/performer";
 
@@ -28,18 +28,17 @@ export default function BookingSummary({ performer }: Props) {
         </div>
 
         <div className="min-w-0 flex-1">
-          <h2 className="font-headline text-xl text-espresso sm:text-2xl">
+          <h2 className="font-performer text-xl font-bold text-espresso sm:text-2xl">
             {performer.name}
           </h2>
           <p className="mt-1 text-sm text-espresso/60">
             {performer.category} · {performer.location}
           </p>
-          <Link
+          <TextLink
+            label="View Profile"
             href={`/performers/${performer.id}`}
-            className="mt-2 inline-block text-sm font-medium text-burnt-orange underline underline-offset-4 transition-opacity hover:opacity-80"
-          >
-            View Profile
-          </Link>
+            className="mt-2 inline-block"
+          />
         </div>
       </div>
 

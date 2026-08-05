@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import OrangeButton from "@/components/ui/OrangeButton";
 import { formatPeso } from "@/lib/format";
 import type { Performer } from "@/types/performer";
 
@@ -43,11 +44,11 @@ export default function PerformerCard({ performer }: Props) {
         </div>
 
         <div className="px-3 pt-3 pb-3">
-          <h2 className="truncate font-headline text-base text-espresso">
+          <h2 className="truncate font-performer text-base font-bold text-espresso">
             {performer.name}
           </h2>
           <p className="mt-0.5 text-xs font-medium text-espresso/80">
-            from {formatPeso(performer.price)}
+            Talent Fee: {formatPeso(performer.price)}
           </p>
           <p className="mt-1 truncate text-[11px] text-espresso/55">
             {performer.genres.slice(0, 2).join(" · ")} · {performer.location}
@@ -56,13 +57,13 @@ export default function PerformerCard({ performer }: Props) {
       </Link>
 
       <div className="relative z-10 px-3 pb-3">
-        <Link
-          href={`/book/${performer.id}`}
+        <OrangeButton
+          label="Book Now"
+          redirectAction={`/book/${performer.id}`}
+          rounded="xs"
           draggable={false}
-          className="block rounded-xs bg-burnt-orange px-3 py-2 text-center text-xs font-medium uppercase tracking-wide text-sand transition-colors hover:bg-burnt-orange/90"
-        >
-          Book Now
-        </Link>
+          className="block px-3 py-2 text-center text-xs font-medium uppercase tracking-wide"
+        />
       </div>
     </article>
   );

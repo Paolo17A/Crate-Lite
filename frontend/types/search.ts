@@ -1,5 +1,3 @@
-import type { PerformerCategory } from "@/types/performer";
-
 export type PerformerSearchFilters = {
   query?: string;
   categories?: string[];

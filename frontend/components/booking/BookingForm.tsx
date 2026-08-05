@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState, type SubmitEvent } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import AvailabilityCalendar from "@/components/shared/AvailabilityCalendar";
-import { isDateSelectable, toDateKey } from "@/lib/availability";
+import OrangeButton from "@/components/ui/OrangeButton";
+import { useBookingForm } from "@/hooks/useBookingForm";
+import { useCountdownRedirect } from "@/hooks/useCountdownRedirect";
+import {
+  BOOKING_REDIRECT_SECONDS,
+  BOOKING_TIME_OPTIONS,
+  EVENT_TYPES,
+} from "@/lib/booking";
 import type { Performer } from "@/types/performer";
 
 type Props = {
@@ -17,44 +21,8 @@ const fieldClass =
 const labelClass =
   "mb-1.5 block text-xs font-medium uppercase tracking-wide text-black";
 
-const eventTypes = [
-  "Wedding",
-  "Corporate",
-  "Birthday",
-  "Private party",
-  "Festival",
-  "Other",
-];
-
-const REDIRECT_SECONDS = 10;
-
-function toTimeKey(date = new Date()): string {
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${hours}:${minutes}`;
-}
-
-/** Normalize HH:MM or HH:MM:SS to HH:MM for comparisons. */
-function normalizeTime(value: string): string {
-  return value.slice(0, 5);
-}
-
 function BookingSuccess({ performerName }: { performerName: string }) {
-  const router = useRouter();
-  const [secondsLeft, setSecondsLeft] = useState(REDIRECT_SECONDS);
-
-  useEffect(() => {
-    if (secondsLeft <= 0) {
-      router.push("/");
-      return;
-    }
-
-    const id = window.setTimeout(() => {
-      setSecondsLeft((current) => current - 1);
-    }, 1000);
-
-    return () => window.clearTimeout(id);
-  }, [secondsLeft, router]);
+  const { secondsLeft } = useCountdownRedirect(BOOKING_REDIRECT_SECONDS, "/");
 
   return (
     <div className="px-2 py-6 text-center sm:py-8">
@@ -64,12 +32,11 @@ function BookingSuccess({ performerName }: { performerName: string }) {
         We&apos;ll follow up soon.
       </p>
 
-      <Link
-        href="/search"
-        className="mt-8 inline-block rounded bg-burnt-orange px-6 py-3 text-sm font-bold uppercase tracking-wide text-sand transition-colors hover:bg-burnt-orange/90"
-      >
-        Search for more performers
-      </Link>
+      <OrangeButton
+        label="Search for more performers"
+        redirectAction="/search"
+        className="mt-8 inline-block px-6 py-3 text-sm font-bold uppercase tracking-wide"
+      />
 
       <p className="mt-6 text-sm text-espresso/65">
         You will be sent back home in{" "}
@@ -86,99 +53,19 @@ function BookingSuccess({ performerName }: { performerName: string }) {
 }
 
 export default function BookingForm({ performer }: Props) {
-  const [submitted, setSubmitted] = useState(false);
-  const [eventDate, setEventDate] = useState("");
-  const [dateError, setDateError] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [startTimeError, setStartTimeError] = useState("");
-  const [endTimeError, setEndTimeError] = useState("");
-
-  function validateDate(value: string): string {
-    if (!value) return "Please select an event date.";
-    if (!isDateSelectable(performer, value)) {
-      return "That date is unavailable. Check availability and choose another.";
-    }
-    return "";
-  }
-
-  function validateTimes(
-    date: string,
-    start: string,
-    end: string,
-  ): { start: string; end: string } {
-    let startError = "";
-    let endError = "";
-
-    if (!start) startError = "Please select a start time.";
-    if (!end) endError = "Please select an end time.";
-
-    const startKey = start ? normalizeTime(start) : "";
-    const endKey = end ? normalizeTime(end) : "";
-
-    const pastErrors = pastCurrentTimeErrors(date, start, end);
-    if (pastErrors.start) startError = pastErrors.start;
-    if (pastErrors.end) endError = pastErrors.end;
-
-    if (startKey && endKey && endKey <= startKey && !endError) {
-      endError = "End time must be after start time.";
-    }
-
-    return { start: startError, end: endError };
-  }
-
-  /** Only the "after now" checks — used when the selected date changes. */
-  function pastCurrentTimeErrors(
-    date: string,
-    start: string,
-    end: string,
-  ): { start: string; end: string } {
-    if (date !== toDateKey(new Date())) {
-      return { start: "", end: "" };
-    }
-
-    const now = toTimeKey();
-    const startKey = start ? normalizeTime(start) : "";
-    const endKey = end ? normalizeTime(end) : "";
-
-    return {
-      start:
-        startKey && startKey <= now
-          ? "You must select a time after the current time."
-          : "",
-      end:
-        endKey && endKey <= now
-          ? "You must select a time after the current time."
-          : "",
-    };
-  }
-
-  function handleEventDateChange(dateKey: string) {
-    setEventDate(dateKey);
-    setDateError("");
-    const errors = pastCurrentTimeErrors(dateKey, startTime, endTime);
-    setStartTimeError(errors.start);
-    setEndTimeError(errors.end);
-  }
-
-  function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    const nextDateError = validateDate(eventDate);
-    setDateError(nextDateError);
-    if (nextDateError) {
-      setStartTimeError("");
-      setEndTimeError("");
-      return;
-    }
-
-    const nextTimeErrors = validateTimes(eventDate, startTime, endTime);
-    setStartTimeError(nextTimeErrors.start);
-    setEndTimeError(nextTimeErrors.end);
-    if (nextTimeErrors.start || nextTimeErrors.end) return;
-
-    setSubmitted(true);
-  }
+  const {
+    submitted,
+    eventDate,
+    dateError,
+    startTime,
+    endTime,
+    startTimeError,
+    endTimeError,
+    handleEventDateChange,
+    handleStartTimeChange,
+    handleEndTimeChange,
+    handleSubmit,
+  } = useBookingForm(performer);
 
   if (submitted) {
     return <BookingSuccess performerName={performer.name} />;
@@ -213,17 +100,22 @@ export default function BookingForm({ performer }: Props) {
           <div>
             <label className="block">
               <span className={labelClass}>Start Time</span>
-              <input
-                type="time"
+              <select
                 name="startTime"
                 required
                 value={startTime}
-                onChange={(e) => {
-                  setStartTime(e.target.value);
-                  setStartTimeError("");
-                }}
+                onChange={(e) => handleStartTimeChange(e.target.value)}
                 className={fieldClass}
-              />
+              >
+                <option value="" disabled>
+                  Select start time
+                </option>
+                {BOOKING_TIME_OPTIONS.map((option) => (
+                  <option key={`start-${option.value}`} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </label>
             {startTimeError && (
               <p className="mt-1.5 text-sm font-medium text-burnt-orange" role="alert">
@@ -234,17 +126,22 @@ export default function BookingForm({ performer }: Props) {
           <div>
             <label className="block">
               <span className={labelClass}>End Time</span>
-              <input
-                type="time"
+              <select
                 name="endTime"
                 required
                 value={endTime}
-                onChange={(e) => {
-                  setEndTime(e.target.value);
-                  setEndTimeError("");
-                }}
+                onChange={(e) => handleEndTimeChange(e.target.value)}
                 className={fieldClass}
-              />
+              >
+                <option value="" disabled>
+                  Select end time
+                </option>
+                {BOOKING_TIME_OPTIONS.map((option) => (
+                  <option key={`end-${option.value}`} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </label>
             {endTimeError && (
               <p className="mt-1.5 text-sm font-medium text-burnt-orange" role="alert">
@@ -263,7 +160,7 @@ export default function BookingForm({ performer }: Props) {
               <option value="" disabled>
                 Select event type
               </option>
-              {eventTypes.map((type) => (
+              {EVENT_TYPES.map((type) => (
                 <option key={type} value={type}>
                   {type}
                 </option>
@@ -292,12 +189,11 @@ export default function BookingForm({ performer }: Props) {
           className={`${fieldClass} resize-none`}
         />
       </label>
-      <button
+      <OrangeButton
+        label="Submit booking request"
         type="submit"
-        className="w-full rounded bg-burnt-orange px-6 py-4 text-base font-bold uppercase tracking-wide text-sand transition-colors hover:bg-burnt-orange/90 sm:text-lg"
-      >
-        Submit booking request
-      </button>
+        className="w-full px-6 py-4 text-base font-bold uppercase tracking-wide sm:text-lg"
+      />
     </form>
   );
 }

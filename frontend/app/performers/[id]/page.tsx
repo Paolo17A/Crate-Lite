@@ -1,8 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProfileMainPanels from "@/components/performer/ProfileMainPanels";
 import RelatedPerformers from "@/components/performer/RelatedPerformers";
+import OrangeButton from "@/components/ui/OrangeButton";
 import { performers } from "@/data/performers";
 import {
   getPerformerById,
@@ -61,7 +61,7 @@ export default async function PerformerProfilePage({ params }: Props) {
               <p className="text-sm uppercase tracking-wide text-espresso/55">
                 {performer.category} · {performer.location}
               </p>
-              <h1 className="mt-1 text-3xl font-medium text-espresso sm:text-4xl">
+              <h1 className="mt-1 font-performer text-3xl font-bold text-espresso sm:text-4xl">
                 {performer.name}
               </h1>
               <ul className="mt-3 flex flex-wrap gap-2">
@@ -81,12 +81,12 @@ export default async function PerformerProfilePage({ params }: Props) {
             <p className="text-3xl font-medium text-espresso">
               {formatPeso(performer.price)}
             </p>
-            <Link
-              href={`/book/${performer.id}`}
-              className="mt-4 block w-full rounded-full bg-burnt-orange px-6 py-3.5 text-center text-base font-medium uppercase tracking-wide text-sand transition-colors hover:bg-burnt-orange/90"
-            >
-              Book Now
-            </Link>
+            <OrangeButton
+              label="Book Now"
+              redirectAction={`/book/${performer.id}`}
+              rounded="full"
+              className="mt-4 block w-full px-6 py-3.5 text-center text-base font-medium uppercase tracking-wide"
+            />
           </div>
         </div>
 

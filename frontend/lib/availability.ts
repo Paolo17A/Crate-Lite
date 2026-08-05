@@ -1,5 +1,34 @@
 import type { Performer } from "@/types/performer";
 
+export const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] as const;
+
+export const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+] as const;
+
+export type CalendarCell = {
+  key: string;
+  day: number;
+  dateKey: string;
+};
+
+export type MonthOption = {
+  label: string;
+  index: number;
+  disabled: boolean;
+};
+
 export function toDateKey(date: Date): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -55,4 +84,70 @@ export function isDateSelectable(
   const today = toDateKey(new Date());
   if (dateKey < today) return false;
   return !isDateBooked(performer, dateKey);
+}
+
+export function startOfMonth(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+export function addMonths(date: Date, delta: number): Date {
+  return new Date(date.getFullYear(), date.getMonth() + delta, 1);
+}
+
+export function isBeforeCurrentMonth(month: Date, now = new Date()): boolean {
+  return (
+    month.getFullYear() < now.getFullYear() ||
+    (month.getFullYear() === now.getFullYear() &&
+      month.getMonth() < now.getMonth())
+  );
+}
+
+export function buildCalendarCells(
+  visibleMonth: Date,
+): (CalendarCell | null)[] {
+  const year = visibleMonth.getFullYear();
+  const month = visibleMonth.getMonth();
+  const firstWeekday = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const items: (CalendarCell | null)[] = [];
+
+  for (let i = 0; i < firstWeekday; i++) {
+    items.push(null);
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day, 12);
+    items.push({
+      key: `${year}-${month}-${day}`,
+      day,
+      dateKey: toDateKey(date),
+    });
+  }
+
+  return items;
+}
+
+export function buildYearOptions(
+  currentYear: number,
+  yearsAhead = 3,
+): number[] {
+  const years: number[] = [];
+  for (let y = currentYear; y <= currentYear + yearsAhead; y++) {
+    years.push(y);
+  }
+  return years;
+}
+
+export function buildMonthOptions(
+  visibleYear: number,
+  currentYear: number,
+  currentMonth: number,
+): MonthOption[] {
+  return MONTHS.map((label, index) => ({
+    label,
+    index,
+    disabled:
+      visibleYear < currentYear ||
+      (visibleYear === currentYear && index < currentMonth),
+  }));
 }

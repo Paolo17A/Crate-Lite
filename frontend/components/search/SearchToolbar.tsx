@@ -3,6 +3,7 @@
 import type { RefObject } from "react";
 import SearchFilters from "@/components/search/SearchFilters";
 import SearchSort from "@/components/search/SearchSort";
+import SandPanelShell from "@/components/ui/SandPanelShell";
 import type { PageSize } from "@/lib/search";
 import type { FilterSelection, SortSelection } from "@/types/search";
 
@@ -104,7 +105,7 @@ export default function SearchToolbar({
       </button>
 
       {menuOpen && (
-        <div className="absolute right-0 z-50 mt-2 max-h-[min(80vh,40rem)] w-[min(100vw-2rem,22rem)] isolate overflow-y-auto rounded-lg border border-stone bg-sand p-4 shadow-lg sm:p-5">
+        <SandPanelShell className="max-h-[min(80vh,40rem)] w-[min(100vw-2rem,22rem)] overflow-y-auto p-4 sm:p-5">
           <SearchSort value={sort} onChange={onSortChange} embedded />
           <div className="mt-4 border-t border-stone pt-4">
             <SearchFilters
@@ -117,7 +118,7 @@ export default function SearchToolbar({
           <div className="mt-4 border-t border-stone pt-4">
             {pageSizeControl}
           </div>
-        </div>
+        </SandPanelShell>
       )}
     </div>
   );

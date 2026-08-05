@@ -91,3 +91,18 @@ export function countActiveFilters(filters: FilterSelection): number {
     (filters.budgetId !== "any" ? 1 : 0)
   );
 }
+
+export function toggleValue(list: string[], value: string): string[] {
+  return list.includes(value)
+    ? list.filter((item) => item !== value)
+    : [...list, value];
+}
+
+export function emptyFilterSelection(): FilterSelection {
+  return {
+    categories: [],
+    locations: [],
+    genres: [],
+    budgetId: "any",
+  };
+}

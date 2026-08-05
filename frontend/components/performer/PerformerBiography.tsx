@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { useIsClient } from "@/hooks/useIsClient";
+import { useState } from "react";
+import BiographyDialog from "@/components/performer/BiographyDialog";
+import TextLink from "@/components/ui/TextLink";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
+import { useClampedText } from "@/hooks/useClampedText";
 
 type Props = {
   name: string;
@@ -16,45 +18,10 @@ export default function PerformerBiography({
   biography,
   fillAvailable = false,
 }: Props) {
-  const textRef = useRef<HTMLParagraphElement>(null);
-  const [clamped, setClamped] = useState(false);
+  const { textRef, clamped } = useClampedText([biography, fillAvailable]);
   const [open, setOpen] = useState(false);
-  const mounted = useIsClient();
 
-  useEffect(() => {
-    const el = textRef.current;
-    if (!el) return;
-
-    const check = () => {
-      setClamped(el.scrollHeight > el.clientHeight + 1);
-    };
-
-    // Wait a frame so grid row-span height has settled
-    const frame = requestAnimationFrame(check);
-    const observer = new ResizeObserver(check);
-    observer.observe(el);
-    window.addEventListener("resize", check);
-    return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-      window.removeEventListener("resize", check);
-    };
-  }, [biography, fillAvailable]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open]);
+  useBodyScrollLock(open, { onEscape: () => setOpen(false) });
 
   return (
     <>
@@ -75,47 +42,20 @@ export default function PerformerBiography({
           {biography}
         </p>
         {clamped && (
-          <button
-            type="button"
+          <TextLink
+            label="Show more"
             onClick={() => setOpen(true)}
-            className="mt-3 shrink-0 text-sm font-medium text-burnt-orange underline underline-offset-4 transition-opacity hover:opacity-80"
-          >
-            Show more
-          </button>
+            className="mt-3 shrink-0"
+          />
         )}
       </section>
 
-      {mounted &&
-        open &&
-        createPortal(
-          <div
-            className="fixed inset-0 z-200 flex items-center justify-center bg-espresso/80 p-4"
-            role="dialog"
-            aria-modal="true"
-            aria-label={`${name} biography`}
-            onClick={() => setOpen(false)}
-          >
-            <div
-              className="relative max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-espresso bg-sand p-6 sm:p-8"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                type="button"
-                className="absolute top-4 right-4 text-sm text-espresso/60 transition-colors hover:text-espresso"
-                onClick={() => setOpen(false)}
-              >
-                Close
-              </button>
-              <h2 className="pr-12 text-2xl font-medium text-espresso">
-                Biography
-              </h2>
-              <p className="mt-4 text-justify leading-relaxed whitespace-pre-wrap text-espresso/80">
-                {biography}
-              </p>
-            </div>
-          </div>,
-          document.body,
-        )}
+      <BiographyDialog
+        open={open}
+        name={name}
+        biography={biography}
+        onClose={() => setOpen(false)}
+      />
     </>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import PerformerCard from "@/components/shared/PerformerCard";
+import TextLink from "@/components/ui/TextLink";
 import { useDragScroll } from "@/hooks/useDragScroll";
 import type { Performer, PerformerCategory } from "@/types/performer";
 
@@ -42,12 +42,11 @@ export default function CategoryRow({ title, category, performers }: Props) {
         </ul>
       </div>
       <div className="text-center">
-        <Link
+        <TextLink
+          label="View All"
           href={`/search?category=${encodeURIComponent(category)}`}
-          className="font-performer text-sm font-medium text-burnt-orange underline underline-offset-4 transition-opacity hover:opacity-80"
-        >
-          View All
-        </Link>
+          className="font-performer"
+        />
       </div>
     </div>
   );

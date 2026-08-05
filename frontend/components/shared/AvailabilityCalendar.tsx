@@ -1,7 +1,8 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
-import { isDateSelectable, toDateKey } from "@/lib/availability";
+import { useId } from "react";
+import { useAvailabilityCalendar } from "@/hooks/useAvailabilityCalendar";
+import { isDateSelectable, WEEKDAYS } from "@/lib/availability";
 import type { Performer } from "@/types/performer";
 
 type ViewProps = {
@@ -20,39 +21,6 @@ type PickProps = {
 
 type Props = ViewProps | PickProps;
 
-const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-function startOfMonth(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
-}
-
-function addMonths(date: Date, delta: number): Date {
-  return new Date(date.getFullYear(), date.getMonth() + delta, 1);
-}
-
-function isBeforeCurrentMonth(month: Date, now = new Date()): boolean {
-  return (
-    month.getFullYear() < now.getFullYear() ||
-    (month.getFullYear() === now.getFullYear() &&
-      month.getMonth() < now.getMonth())
-  );
-}
-
 const selectClass =
   "rounded border border-stone bg-white px-1.5 py-1 text-espresso outline-none transition-colors focus:border-burnt-orange";
 
@@ -61,78 +29,20 @@ export default function AvailabilityCalendar(props: Props) {
   const compact = size === "compact";
   const monthSelectId = useId();
   const yearSelectId = useId();
-  const todayKey = toDateKey(new Date());
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth();
-  const [visibleMonth, setVisibleMonth] = useState(() =>
-    startOfMonth(new Date()),
-  );
-
-  const bookedSet = useMemo(
-    () => new Set(performer.bookedDates),
-    [performer.bookedDates],
-  );
-
-  const upcomingBookedCount = useMemo(
-    () => performer.bookedDates.filter((d) => d >= todayKey).length,
-    [performer.bookedDates, todayKey],
-  );
-
-  const yearOptions = useMemo(() => {
-    const years: number[] = [];
-    for (let y = currentYear; y <= currentYear + 3; y++) years.push(y);
-    return years;
-  }, [currentYear]);
-
-  const monthOptions = useMemo(() => {
-    const year = visibleMonth.getFullYear();
-    return MONTHS.map((label, index) => ({
-      label,
-      index,
-      disabled:
-        year < currentYear ||
-        (year === currentYear && index < currentMonth),
-    }));
-  }, [visibleMonth, currentYear, currentMonth]);
-
-  const cells = useMemo(() => {
-    const year = visibleMonth.getFullYear();
-    const month = visibleMonth.getMonth();
-    const firstWeekday = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const items: ({ key: string; day: number; dateKey: string } | null)[] = [];
-
-    for (let i = 0; i < firstWeekday; i++) {
-      items.push(null);
-    }
-
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(year, month, day, 12);
-      items.push({
-        key: `${year}-${month}-${day}`,
-        day,
-        dateKey: toDateKey(date),
-      });
-    }
-
-    return items;
-  }, [visibleMonth]);
-
-  const canGoPrev = !isBeforeCurrentMonth(addMonths(visibleMonth, -1));
-
-  function setMonth(monthIndex: number) {
-    const next = new Date(visibleMonth.getFullYear(), monthIndex, 1);
-    if (isBeforeCurrentMonth(next)) return;
-    setVisibleMonth(next);
-  }
-
-  function setYear(year: number) {
-    let next = new Date(year, visibleMonth.getMonth(), 1);
-    if (isBeforeCurrentMonth(next)) {
-      next = startOfMonth(new Date());
-    }
-    setVisibleMonth(next);
-  }
+  const {
+    visibleMonth,
+    todayKey,
+    bookedSet,
+    upcomingBookedCount,
+    yearOptions,
+    monthOptions,
+    cells,
+    canGoPrev,
+    goPrev,
+    goNext,
+    setMonth,
+    setYear,
+  } = useAvailabilityCalendar(performer);
 
   const dayText = compact ? "text-xs" : "text-sm";
   const gap = compact ? "gap-0.5" : "gap-1";
@@ -145,7 +55,7 @@ export default function AvailabilityCalendar(props: Props) {
       <div className="flex items-center justify-between gap-2">
         <button
           type="button"
-          onClick={() => setVisibleMonth((m) => addMonths(m, -1))}
+          onClick={goPrev}
           disabled={!canGoPrev}
           className={navBtn}
           aria-label="Previous month"
@@ -189,7 +99,7 @@ export default function AvailabilityCalendar(props: Props) {
 
         <button
           type="button"
-          onClick={() => setVisibleMonth((m) => addMonths(m, 1))}
+          onClick={goNext}
           className={navBtn}
           aria-label="Next month"
         >
@@ -226,9 +136,7 @@ export default function AvailabilityCalendar(props: Props) {
           const selected = mode === "pick" && props.value === cell.dateKey;
           const selectable =
             mode === "pick" && isDateSelectable(performer, cell.dateKey);
-          const cellSize = compact
-            ? "h-7 w-full"
-            : "aspect-square";
+          const cellSize = compact ? "h-7 w-full" : "aspect-square";
 
           if (mode === "view") {
             return (

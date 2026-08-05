@@ -1,3 +1,5 @@
+import OrangeButton from "@/components/ui/OrangeButton";
+
 type Props = {
   rangeStart: number;
   rangeEnd: number;
@@ -25,25 +27,21 @@ export default function SearchPagination({
 
       {totalPages > 1 && (
         <div className="flex items-center gap-2">
-          <button
-            type="button"
+          <OrangeButton
+            label="Previous"
             disabled={page <= 1}
             onClick={onPrevious}
-            className="rounded bg-burnt-orange px-4 py-2 text-sm font-medium text-sand transition hover:bg-burnt-orange/90 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            Previous
-          </button>
+            className="px-4 py-2 text-sm font-medium"
+          />
           <span className="px-2 text-sm text-espresso">
             Page {page} of {totalPages}
           </span>
-          <button
-            type="button"
+          <OrangeButton
+            label="Next"
             disabled={page >= totalPages}
             onClick={onNext}
-            className="rounded bg-burnt-orange px-4 py-2 text-sm font-medium text-sand transition hover:bg-burnt-orange/90 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            Next
-          </button>
+            className="px-4 py-2 text-sm font-medium"
+          />
         </div>
       )}
     </div>
