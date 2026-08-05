@@ -40,7 +40,7 @@ export default async function PerformerProfilePage({ params }: Props) {
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-espresso/40 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-espresso/40 via-transparent to-transparent" />
       </div>
 
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:max-w-[min(90rem,calc(100%-5rem))] lg:px-10">

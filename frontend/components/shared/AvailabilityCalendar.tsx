@@ -141,7 +141,7 @@ export default function AvailabilityCalendar(props: Props) {
     : "rounded border border-stone px-3 py-1.5 text-sm text-espresso transition-colors hover:border-burnt-orange disabled:cursor-not-allowed disabled:opacity-35";
 
   return (
-    <div className={compact ? "mx-auto w-full max-w-[260px]" : "w-full max-w-md"}>
+    <div className={compact ? "mx-auto w-full max-w-65" : "w-full max-w-md"}>
       <div className="flex items-center justify-between gap-2">
         <button
           type="button"
@@ -161,7 +161,7 @@ export default function AvailabilityCalendar(props: Props) {
             id={monthSelectId}
             value={visibleMonth.getMonth()}
             onChange={(e) => setMonth(Number(e.target.value))}
-            className={`${selectClass} ${compact ? "max-w-[7.5rem] text-xs" : "text-sm"}`}
+            className={`${selectClass} ${compact ? "max-w-30 text-xs" : "text-sm"}`}
           >
             {monthOptions.map(({ label, index, disabled }) => (
               <option key={label} value={index} disabled={disabled}>

@@ -37,7 +37,7 @@ export default function PerformerCard({ performer }: Props) {
             />
             {/* Photo emulsion gloss */}
             <div
-              className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-black/10"
+              className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/40 via-transparent to-black/10"
               aria-hidden="true"
             />
           </div>
