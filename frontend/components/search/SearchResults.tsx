@@ -47,11 +47,7 @@ export default function SearchResults({
     goToNext,
   } = usePagination({ items: results, resetKey });
 
-  const heading = formatSearchHeading(
-    initialQuery,
-    applied.categories,
-    results.length,
-  );
+  const heading = formatSearchHeading(initialQuery, applied, results.length);
   const appliedFilterCount = countActiveFilters(applied);
 
   return (

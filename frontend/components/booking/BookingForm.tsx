@@ -4,7 +4,7 @@ import { useEffect, useState, type SubmitEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AvailabilityCalendar from "@/components/shared/AvailabilityCalendar";
-import { isDateSelectable } from "@/lib/availability";
+import { isDateSelectable, toDateKey } from "@/lib/availability";
 import type { Performer } from "@/types/performer";
 
 type Props = {
@@ -27,6 +27,17 @@ const eventTypes = [
 ];
 
 const REDIRECT_SECONDS = 10;
+
+function toTimeKey(date = new Date()): string {
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
+
+/** Normalize HH:MM or HH:MM:SS to HH:MM for comparisons. */
+function normalizeTime(value: string): string {
+  return value.slice(0, 5);
+}
 
 function BookingSuccess({ performerName }: { performerName: string }) {
   const router = useRouter();
@@ -80,7 +91,8 @@ export default function BookingForm({ performer }: Props) {
   const [dateError, setDateError] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [timeError, setTimeError] = useState("");
+  const [startTimeError, setStartTimeError] = useState("");
+  const [endTimeError, setEndTimeError] = useState("");
 
   function validateDate(value: string): string {
     if (!value) return "Please select an event date.";
@@ -90,22 +102,81 @@ export default function BookingForm({ performer }: Props) {
     return "";
   }
 
+  function validateTimes(
+    date: string,
+    start: string,
+    end: string,
+  ): { start: string; end: string } {
+    let startError = "";
+    let endError = "";
+
+    if (!start) startError = "Please select a start time.";
+    if (!end) endError = "Please select an end time.";
+
+    const startKey = start ? normalizeTime(start) : "";
+    const endKey = end ? normalizeTime(end) : "";
+
+    const pastErrors = pastCurrentTimeErrors(date, start, end);
+    if (pastErrors.start) startError = pastErrors.start;
+    if (pastErrors.end) endError = pastErrors.end;
+
+    if (startKey && endKey && endKey <= startKey && !endError) {
+      endError = "End time must be after start time.";
+    }
+
+    return { start: startError, end: endError };
+  }
+
+  /** Only the "after now" checks — used when the selected date changes. */
+  function pastCurrentTimeErrors(
+    date: string,
+    start: string,
+    end: string,
+  ): { start: string; end: string } {
+    if (date !== toDateKey(new Date())) {
+      return { start: "", end: "" };
+    }
+
+    const now = toTimeKey();
+    const startKey = start ? normalizeTime(start) : "";
+    const endKey = end ? normalizeTime(end) : "";
+
+    return {
+      start:
+        startKey && startKey <= now
+          ? "You must select a time after the current time."
+          : "",
+      end:
+        endKey && endKey <= now
+          ? "You must select a time after the current time."
+          : "",
+    };
+  }
+
+  function handleEventDateChange(dateKey: string) {
+    setEventDate(dateKey);
+    setDateError("");
+    const errors = pastCurrentTimeErrors(dateKey, startTime, endTime);
+    setStartTimeError(errors.start);
+    setEndTimeError(errors.end);
+  }
+
   function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const nextDateError = validateDate(eventDate);
+    setDateError(nextDateError);
     if (nextDateError) {
-      setDateError(nextDateError);
+      setStartTimeError("");
+      setEndTimeError("");
       return;
     }
 
-    if (startTime && endTime && endTime <= startTime) {
-      setTimeError("End time must be after start time.");
-      return;
-    }
+    const nextTimeErrors = validateTimes(eventDate, startTime, endTime);
+    setStartTimeError(nextTimeErrors.start);
+    setEndTimeError(nextTimeErrors.end);
+    if (nextTimeErrors.start || nextTimeErrors.end) return;
 
-    setDateError("");
-    setTimeError("");
     setSubmitted(true);
   }
 
@@ -125,10 +196,7 @@ export default function BookingForm({ performer }: Props) {
               size="compact"
               performer={performer}
               value={eventDate}
-              onChange={(dateKey) => {
-                setEventDate(dateKey);
-                setDateError("");
-              }}
+              onChange={handleEventDateChange}
             />
           </div>
           {dateError && (
@@ -142,40 +210,48 @@ export default function BookingForm({ performer }: Props) {
         </div>
 
         <div className="flex h-full flex-col space-y-5">
-          <label className="block">
-            <span className={labelClass}>Start Time</span>
-            <input
-              type="time"
-              name="startTime"
-              required
-              value={startTime}
-              onChange={(e) => {
-                setStartTime(e.target.value);
-                setTimeError("");
-              }}
-              className={fieldClass}
-            />
-          </label>
-          <label className="block">
-            <span className={labelClass}>End Time</span>
-            <input
-              type="time"
-              name="endTime"
-              required
-              value={endTime}
-              min={startTime || undefined}
-              onChange={(e) => {
-                setEndTime(e.target.value);
-                setTimeError("");
-              }}
-              className={fieldClass}
-            />
-          </label>
-          {timeError && (
-            <p className="text-sm font-medium text-burnt-orange" role="alert">
-              {timeError}
-            </p>
-          )}
+          <div>
+            <label className="block">
+              <span className={labelClass}>Start Time</span>
+              <input
+                type="time"
+                name="startTime"
+                required
+                value={startTime}
+                onChange={(e) => {
+                  setStartTime(e.target.value);
+                  setStartTimeError("");
+                }}
+                className={fieldClass}
+              />
+            </label>
+            {startTimeError && (
+              <p className="mt-1.5 text-sm font-medium text-burnt-orange" role="alert">
+                {startTimeError}
+              </p>
+            )}
+          </div>
+          <div>
+            <label className="block">
+              <span className={labelClass}>End Time</span>
+              <input
+                type="time"
+                name="endTime"
+                required
+                value={endTime}
+                onChange={(e) => {
+                  setEndTime(e.target.value);
+                  setEndTimeError("");
+                }}
+                className={fieldClass}
+              />
+            </label>
+            {endTimeError && (
+              <p className="mt-1.5 text-sm font-medium text-burnt-orange" role="alert">
+                {endTimeError}
+              </p>
+            )}
+          </div>
           <label className="block">
             <span className={labelClass}>Event Type</span>
             <select

@@ -57,7 +57,7 @@ export function buildSearchPath(
 
 export function formatSearchHeading(
   query: string,
-  categories: string[],
+  filters: FilterSelection,
   count: number,
 ): string {
   const q = query.trim();
@@ -65,8 +65,12 @@ export function formatSearchHeading(
     return `Displaying ${count} result${count === 1 ? "" : "s"} for "${q}"`;
   }
 
-  if (categories.length === 1) {
-    const category = categories[0];
+  if (countActiveFilters(filters) === 0) {
+    return `Displaying all ${count} performers`;
+  }
+
+  if (filters.categories.length === 1) {
+    const category = filters.categories[0];
     const label =
       category === "Other"
         ? "Other"

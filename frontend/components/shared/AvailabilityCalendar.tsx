@@ -137,8 +137,8 @@ export default function AvailabilityCalendar(props: Props) {
   const dayText = compact ? "text-xs" : "text-sm";
   const gap = compact ? "gap-0.5" : "gap-1";
   const navBtn = compact
-    ? "rounded border border-stone px-2 py-1 text-xs text-espresso transition-colors hover:border-burnt-orange disabled:cursor-not-allowed disabled:opacity-35"
-    : "rounded border border-stone px-3 py-1.5 text-sm text-espresso transition-colors hover:border-burnt-orange disabled:cursor-not-allowed disabled:opacity-35";
+    ? "rounded bg-burnt-orange px-2 py-1 text-xs font-medium text-sand transition-colors hover:bg-burnt-orange/90 disabled:cursor-not-allowed disabled:opacity-35"
+    : "rounded bg-burnt-orange px-3 py-1.5 text-sm font-medium text-sand transition-colors hover:bg-burnt-orange/90 disabled:cursor-not-allowed disabled:opacity-35";
 
   return (
     <div className={compact ? "mx-auto w-full max-w-65" : "w-full max-w-md"}>

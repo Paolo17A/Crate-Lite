@@ -36,10 +36,10 @@ function PageSizeControl({
       <select
         value={pageSize}
         onChange={(e) => onPageSizeChange(Number(e.target.value) as PageSize)}
-        className="rounded border border-burnt-orange bg-sand px-3 py-2.5 text-sm text-espresso outline-none transition focus:border-burnt-orange focus:ring-2 focus:ring-burnt-orange/30"
+        className="rounded border border-burnt-orange bg-burnt-orange px-3 py-2.5 text-sm font-medium text-sand outline-none transition hover:bg-burnt-orange/90 focus:ring-2 focus:ring-burnt-orange/30"
       >
         {pageSizes.map((size) => (
-          <option key={size} value={size}>
+          <option key={size} value={size} className="bg-white text-espresso">
             {size}
           </option>
         ))}

@@ -26,7 +26,7 @@ export default function CategoryRow({ title, category, performers }: Props) {
       <div className="relative">
         <ul
           ref={ref}
-          className={`flex gap-5 overflow-x-auto pb-6 scrollbar-thin select-none sm:gap-6 ${
+          className={`flex gap-5 overflow-x-auto pt-3 pb-6 scrollbar-thin select-none sm:gap-6 ${
             centered ? "justify-center" : "justify-start"
           } ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
           style={{ WebkitOverflowScrolling: "touch" }}
