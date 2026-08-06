@@ -20,7 +20,7 @@ Entertainer booking demo: browse performers by category, search and filter, view
 From the **repository root**:
 
 ```bash
-docker compose up --build
+docker compose up
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
@@ -70,7 +70,7 @@ API listens on [http://localhost:4000](http://localhost:4000) (`GET /health`).
 
 ---
 
-## Project structure
+<!-- ## Project structure
 
 ```
 crate-lite/
@@ -97,13 +97,13 @@ crate-lite/
 └── backend/                    # Express API stub
     ├── Dockerfile
     └── src/index.js
-```
+``` -->
 
-### Frontend layout (by concern)
+### Frontend Structure
 
 | Area | Role |
 |------|------|
-| `app/` | Routes and page composition only |
+| `app/` | Routes and pagesaw |
 | `components/` | UI by feature (`home`, `search`, `performer`, `booking`) plus `shared` / `ui` |
 | `hooks/` | React state, listeners, scroll, menus, form logic |
 | `lib/` | Pure helpers (filters, validation, dates, formatting) |

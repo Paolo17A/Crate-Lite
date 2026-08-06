@@ -72,128 +72,142 @@ export default function BookingForm({ performer }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="grid gap-5 sm:grid-cols-2 sm:items-stretch">
-        <div className="flex h-full flex-col">
-          <span className={labelClass}>Event Date</span>
-          <input type="hidden" name="eventDate" value={eventDate} required />
-          <div className="mt-1 flex flex-1 justify-center rounded border border-stone bg-white p-3">
-            <AvailabilityCalendar
-              mode="pick"
-              size="compact"
-              performer={performer}
-              value={eventDate}
-              onChange={handleEventDateChange}
-            />
+    <>
+      <h1 className="font-performer text-3xl font-bold uppercase tracking-wide text-espresso sm:text-4xl">
+        You&apos;re almost there
+      </h1>
+      <p className="mt-2 text-espresso/70">
+        Let&apos;s tell {performer.name} all about your event
+      </p>
+      <form onSubmit={handleSubmit} className="mt-8 space-y-5 text-left">
+        <div className="grid gap-5 sm:grid-cols-2 sm:items-stretch">
+          <div className="flex h-full flex-col">
+            <span className={labelClass}>Event Date</span>
+            <input type="hidden" name="eventDate" value={eventDate} required />
+            <div className="mt-1 flex flex-1 justify-center rounded border border-stone bg-white p-3">
+              <AvailabilityCalendar
+                mode="pick"
+                size="compact"
+                performer={performer}
+                value={eventDate}
+                onChange={handleEventDateChange}
+              />
+            </div>
+            {dateError && (
+              <p
+                className="mt-2 text-center text-sm font-medium text-burnt-orange"
+                role="alert"
+              >
+                {dateError}
+              </p>
+            )}
           </div>
-          {dateError && (
-            <p
-              className="mt-2 text-center text-sm font-medium text-burnt-orange"
-              role="alert"
-            >
-              {dateError}
-            </p>
-          )}
-        </div>
 
-        <div className="flex h-full flex-col space-y-5">
-          <div>
+          <div className="flex h-full flex-col space-y-5">
+            <div>
+              <label className="block">
+                <span className={labelClass}>Start Time</span>
+                <select
+                  name="startTime"
+                  required
+                  value={startTime}
+                  onChange={(e) => handleStartTimeChange(e.target.value)}
+                  className={fieldClass}
+                >
+                  <option value="" disabled>
+                    Select start time
+                  </option>
+                  {BOOKING_TIME_OPTIONS.map((option) => (
+                    <option key={`start-${option.value}`} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {startTimeError && (
+                <p
+                  className="mt-1.5 text-sm font-medium text-burnt-orange"
+                  role="alert"
+                >
+                  {startTimeError}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="block">
+                <span className={labelClass}>End Time</span>
+                <select
+                  name="endTime"
+                  required
+                  value={endTime}
+                  onChange={(e) => handleEndTimeChange(e.target.value)}
+                  className={fieldClass}
+                >
+                  <option value="" disabled>
+                    Select end time
+                  </option>
+                  {BOOKING_TIME_OPTIONS.map((option) => (
+                    <option key={`end-${option.value}`} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {endTimeError && (
+                <p
+                  className="mt-1.5 text-sm font-medium text-burnt-orange"
+                  role="alert"
+                >
+                  {endTimeError}
+                </p>
+              )}
+            </div>
             <label className="block">
-              <span className={labelClass}>Start Time</span>
+              <span className={labelClass}>Event Type</span>
               <select
-                name="startTime"
+                name="eventType"
                 required
-                value={startTime}
-                onChange={(e) => handleStartTimeChange(e.target.value)}
                 className={fieldClass}
+                defaultValue=""
               >
                 <option value="" disabled>
-                  Select start time
+                  Select event type
                 </option>
-                {BOOKING_TIME_OPTIONS.map((option) => (
-                  <option key={`start-${option.value}`} value={option.value}>
-                    {option.label}
+                {EVENT_TYPES.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
                   </option>
                 ))}
               </select>
             </label>
-            {startTimeError && (
-              <p className="mt-1.5 text-sm font-medium text-burnt-orange" role="alert">
-                {startTimeError}
-              </p>
-            )}
-          </div>
-          <div>
             <label className="block">
-              <span className={labelClass}>End Time</span>
-              <select
-                name="endTime"
+              <span className={labelClass}>Event Location</span>
+              <input
+                type="text"
+                name="eventLocation"
                 required
-                value={endTime}
-                onChange={(e) => handleEndTimeChange(e.target.value)}
+                placeholder="Venue or address"
                 className={fieldClass}
-              >
-                <option value="" disabled>
-                  Select end time
-                </option>
-                {BOOKING_TIME_OPTIONS.map((option) => (
-                  <option key={`end-${option.value}`} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              />
             </label>
-            {endTimeError && (
-              <p className="mt-1.5 text-sm font-medium text-burnt-orange" role="alert">
-                {endTimeError}
-              </p>
-            )}
           </div>
-          <label className="block">
-            <span className={labelClass}>Event Type</span>
-            <select
-              name="eventType"
-              required
-              className={fieldClass}
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Select event type
-              </option>
-              {EVENT_TYPES.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="block">
-            <span className={labelClass}>Event Location</span>
-            <input
-              type="text"
-              name="eventLocation"
-              required
-              placeholder="Venue or address"
-              className={fieldClass}
-            />
-          </label>
         </div>
-      </div>
 
-      <label className="block">
-        <span className={labelClass}>Additional Notes</span>
-        <textarea
-          name="notes"
-          rows={4}
-          placeholder="Guest count, vibe, special requests…"
-          className={`${fieldClass} resize-none`}
+        <label className="block">
+          <span className={labelClass}>Additional Notes</span>
+          <textarea
+            name="notes"
+            rows={4}
+            placeholder="Guest count, vibe, special requests…"
+            className={`${fieldClass} resize-none`}
+          />
+        </label>
+        <OrangeButton
+          label="Submit booking request"
+          type="submit"
+          className="w-full px-6 py-4 text-base font-bold uppercase tracking-wide sm:text-lg"
         />
-      </label>
-      <OrangeButton
-        label="Submit booking request"
-        type="submit"
-        className="w-full px-6 py-4 text-base font-bold uppercase tracking-wide sm:text-lg"
-      />
-    </form>
+      </form>
+    </>
   );
 }
