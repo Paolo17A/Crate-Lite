@@ -16,9 +16,11 @@ export default function ProfileMainPanels({
   gallery,
 }: Props) {
   return (
-    <div className="grid gap-6 lg:grid-cols-[260px_1fr] lg:items-start">
-      <PerformerGallery name={name} items={gallery} />
-      <PerformerBiography name={name} biography={biography} fillAvailable />
+    <div className="py-8 sm:py-10">
+      <div className="grid gap-6 lg:grid-cols-[260px_1fr] lg:items-start">
+        <PerformerGallery name={name} items={gallery} />
+        <PerformerBiography name={name} biography={biography} fillAvailable />
+      </div>
     </div>
   );
 }
