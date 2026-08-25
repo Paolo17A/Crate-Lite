@@ -98,7 +98,12 @@ export default function ServerHealthCard() {
       </dl>
 
       {health.error ? (
-        <p className="mt-4 text-sm text-espresso/70">{health.error}</p>
+        <p
+          role="alert"
+          className="mt-4 rounded border border-burnt-orange/40 bg-burnt-orange/10 px-3 py-2 text-sm text-espresso"
+        >
+          {health.error}
+        </p>
       ) : null}
 
       <p className="mt-5 break-all text-xs text-espresso/40">{health.endpoint}</p>

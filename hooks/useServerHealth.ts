@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getApiUrl } from "@/lib/api";
+import { API_OFFLINE_MESSAGE, getApiUrl, isHttpOk } from "@/lib/api";
 
 const POLL_MS = 5000;
 
@@ -56,16 +56,9 @@ export function useServerHealth(): ServerHealth {
         });
         const latencyMs = Math.round(performance.now() - started);
 
-        let body: { status?: string } | null = null;
-        try {
-          body = (await res.json()) as { status?: string };
-        } catch {
-          body = null;
-        }
-
         if (cancelled) return;
 
-        const ok = res.ok && body?.status === "ok";
+        const ok = isHttpOk(res);
         const now = Date.now();
 
         setState((prev) =>
@@ -83,7 +76,7 @@ export function useServerHealth(): ServerHealth {
                 status: "down",
                 latencyMs,
                 lastCheckedAt: now,
-                error: `Unexpected response (${res.status})`,
+                error: API_OFFLINE_MESSAGE,
                 consecutiveSuccesses: 0,
                 upSince: null,
                 endpoint,
@@ -97,7 +90,7 @@ export function useServerHealth(): ServerHealth {
           status: "down",
           latencyMs: Math.round(performance.now() - started),
           lastCheckedAt: Date.now(),
-          error: err instanceof Error ? err.message : "Request failed",
+          error: API_OFFLINE_MESSAGE,
           consecutiveSuccesses: 0,
           upSince: null,
           endpoint,

@@ -81,4 +81,4 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 
 On the backend, `CORS_ORIGIN` can be a comma-separated list of frontend origins (for example `http://localhost:3000,http://localhost:3002`). Restart both servers after env or Helmet/CORS changes.
 
-An unlisted live health page polls `GET /health` every 5 seconds. There is no nav link — open it on whatever port the frontend is using, e.g. [http://localhost:3002/dev/health](http://localhost:3002/dev/health). In production (`NODE_ENV=production`) `/dev/*` returns the normal 404 page.
+An unlisted live health page polls `GET /health` every 5 seconds. There is no nav link — open it on whatever port the frontend is using, e.g. [http://localhost:3002/dev/health](http://localhost:3002/dev/health). An unlisted route index at `/dev/routes` lists mounted API endpoints, GET ping results, and MongoDB/Redis status in a table. In production (`NODE_ENV=production`) `/dev/*` returns the normal 404 page.
