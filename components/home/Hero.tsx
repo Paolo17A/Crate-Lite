@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import CrateLogo from "@/components/shared/CrateLogo";
+import LoginAsPerformerButton from "@/components/shared/LoginAsPerformerButton";
 import SearchBar from "@/components/shared/SearchBar";
 
 /** Set `durationSeconds` per GIF — how long it stays on screen before switching. */
@@ -40,6 +41,10 @@ export default function Hero() {
         />
       ))}
       <div className="absolute inset-0 bg-espresso/55" />
+
+      <div className="absolute top-4 right-4 z-20 sm:top-6 sm:right-6">
+        <LoginAsPerformerButton />
+      </div>
 
       <div className="relative z-10 mx-auto mb-[8vh] flex w-full max-w-3xl flex-col items-center px-4 pb-16 text-center sm:px-6 sm:pb-20">
         <div className="mb-12 rounded-2xl bg-parchment px-3 py-2 sm:mb-16 sm:px-4 sm:py-2.5">

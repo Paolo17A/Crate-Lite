@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import CrateLogo from "@/components/shared/CrateLogo";
+import LoginAsPerformerButton from "@/components/shared/LoginAsPerformerButton";
 import SearchBar from "@/components/shared/SearchBar";
 
 export default function HomeStickyNav() {
@@ -38,6 +39,7 @@ export default function HomeStickyNav() {
             <SearchBar id="sticky-search" compact />
           </Suspense>
         </div>
+        <LoginAsPerformerButton />
       </div>
     </header>
   );
