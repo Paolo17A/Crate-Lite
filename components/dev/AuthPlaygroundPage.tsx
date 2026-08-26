@@ -3,9 +3,11 @@
 import DevMuiProvider from "@/components/dev/DevMuiProvider";
 import LoginForm from "@/components/dev/LoginForm";
 import { useAuthSession } from "@/hooks/useAuthSession";
+import { useTokenRefresh } from "@/hooks/useTokenRefresh";
 
 export default function AuthPlaygroundPage() {
   const auth = useAuthSession();
+  const tokenRefresh = useTokenRefresh(auth.replaceAccessToken);
 
   return (
     <DevMuiProvider>
@@ -17,12 +19,13 @@ export default function AuthPlaygroundPage() {
           Login form mock
         </h1>
         <p className="mt-2 text-sm text-espresso/70">
-          Posts to Crate Backend with a role toggle. The account must already exist
-          in Mongo with a bcrypt password. Refresh cookies are set on the API origin
-          (credentials include).
+          Posts to Crate Backend with a role toggle. The refresh cookie is HttpOnly
+          (`crate_refresh`) on the API origin, so this page infers cookie status from
+          login, refresh, and logout — it does not print the cookie value. Access JWTs
+          are shown in full.
         </p>
         <div className="mt-5">
-          <LoginForm auth={auth} />
+          <LoginForm auth={auth} tokenRefresh={tokenRefresh} />
         </div>
       </section>
     </DevMuiProvider>

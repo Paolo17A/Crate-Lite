@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function AuthPage() {
   return (
     <div className="bg-parchment px-4 py-12 sm:px-6 sm:py-16">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-2xl">
         <AuthPlaygroundPage />
       </div>
     </div>

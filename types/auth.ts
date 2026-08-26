@@ -13,3 +13,20 @@ export type RoleSession = {
   accessToken: string;
   account: AuthAccount;
 };
+
+export type RefreshCookieStatus = "none" | "present" | "rotated" | "cleared";
+
+export type AuthEventKind = "login" | "refresh" | "logout";
+
+export type AuthEvent = {
+  kind: AuthEventKind;
+  at: number;
+};
+
+export type AccessTokenPayload = {
+  sub: string;
+  role: AuthRole;
+  sid: string;
+  iat: number;
+  exp: number;
+};
