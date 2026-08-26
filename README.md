@@ -79,6 +79,6 @@ crate-lite talks to the Crate Backend repo. Copy `.env.example` to `.env.local` 
 NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
 
-On the backend, `CORS_ORIGIN` can be a comma-separated list of frontend origins (for example `http://localhost:3000,http://localhost:3002`). Restart both servers after env or Helmet/CORS changes.
+On the backend, `CORS_ORIGIN=*` allows any frontend origin in local dev (`npm run dev` pins crate-lite to port 3002 so it does not collide with the API on 3000). Login talks to the API origin directly (`credentials: include`); `/dev/health` uses the `/backend` rewrite. Restart both servers after env or Helmet/CORS changes.
 
 An unlisted live health page polls `GET /health` every 5 seconds. There is no nav link — open it on whatever port the frontend is using, e.g. [http://localhost:3002/dev/health](http://localhost:3002/dev/health). An unlisted route index at `/dev/routes` lists mounted API endpoints, GET ping results, and MongoDB/Redis status in a table. In production (`NODE_ENV=production`) `/dev/*` returns the normal 404 page.
