@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import CrateLogo from "@/components/shared/CrateLogo";
+import LoginAsPerformerButton from "@/components/shared/LoginAsPerformerButton";
 import SearchBar from "@/components/shared/SearchBar";
 
 export default function Header() {
@@ -40,6 +41,7 @@ export default function Header() {
           <div className="min-w-0 flex-1">
             <SearchBar id="nav-search" compact />
           </div>
+          <LoginAsPerformerButton />
         </div>
       </div>
     </header>
