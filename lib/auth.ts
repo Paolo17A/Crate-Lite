@@ -1,5 +1,5 @@
 import { getApiUrl, readJson } from "@/lib/api";
-import type { AuthAccount, AuthRole, RoleSession } from "@/types/auth";
+import { AUTH_ROLES, type AccessTokenPayload, type AuthAccount, type AuthRole, type RoleSession } from "@/types/auth";
 
 type AuthErrorBody = {
   message?: string;
@@ -11,6 +11,45 @@ type LoginResponse = AuthErrorBody & {
   performer?: AuthAccount;
   admin?: AuthAccount;
 };
+
+type RefreshResponse = AuthErrorBody & {
+  accessToken?: string;
+};
+
+function jsonFromJwtSegment(segment: string): string {
+  const normalized = segment.replace(/-/g, "+").replace(/_/g, "/");
+  const pad = normalized.length % 4 === 0 ? "" : "=".repeat(4 - (normalized.length % 4));
+  return atob(normalized + pad);
+}
+
+export function decodeAccessToken(token: string): AccessTokenPayload | null {
+  try {
+    const [, payload] = token.split(".");
+    if (!payload) {
+      return null;
+    }
+    const parsed = JSON.parse(jsonFromJwtSegment(payload)) as Partial<AccessTokenPayload>;
+    if (
+      typeof parsed.sub !== "string" ||
+      typeof parsed.sid !== "string" ||
+      typeof parsed.iat !== "number" ||
+      typeof parsed.exp !== "number" ||
+      typeof parsed.role !== "string" ||
+      !(AUTH_ROLES as readonly string[]).includes(parsed.role)
+    ) {
+      return null;
+    }
+    return {
+      sub: parsed.sub,
+      role: parsed.role as AuthRole,
+      sid: parsed.sid,
+      iat: parsed.iat,
+      exp: parsed.exp,
+    };
+  } catch {
+    return null;
+  }
+}
 
 function toNetworkError(err: unknown): Error {
   if (err instanceof TypeError) {
@@ -68,4 +107,20 @@ export async function logoutRequest(): Promise<void> {
   if (!res.ok) {
     throw new Error(body?.message || `Logout failed (${res.status})`);
   }
+}
+
+export async function refreshRequest(): Promise<string> {
+  const { res, body } = await authFetch<RefreshResponse>("/api/auth/refresh", {
+    method: "POST",
+  });
+
+  if (!res.ok) {
+    throw new Error(body?.message || `Refresh failed (${res.status})`);
+  }
+
+  if (!body?.accessToken) {
+    throw new Error("Invalid refresh response");
+  }
+
+  return body.accessToken;
 }

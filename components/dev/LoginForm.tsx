@@ -13,14 +13,18 @@ import Typography from "@mui/material/Typography";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import type { useAuthSession } from "@/hooks/useAuthSession";
+import type { useTokenRefresh } from "@/hooks/useTokenRefresh";
 import { AUTH_ROLES, type AuthRole } from "@/types/auth";
+import TokenRefreshButton from "@/components/dev/TokenRefreshButton";
 
 type Props = {
   auth: ReturnType<typeof useAuthSession>;
+  tokenRefresh: ReturnType<typeof useTokenRefresh>;
 };
 
-export default function LoginForm({ auth }: Props) {
-  const { activeRole, setActiveRole, session, login, logout, loading, error } = auth;
+export default function LoginForm({ auth, tokenRefresh }: Props) {
+  const { activeRole, setActiveRole, session, login, logout, loading, error, cookieStatus, lastEvent } =
+    auth;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -120,6 +124,14 @@ export default function LoginForm({ auth }: Props) {
         </Button>
       </Stack>
 
+      <TokenRefreshButton
+        session={session}
+        cookieStatus={cookieStatus}
+        lastEvent={lastEvent}
+        tokenRefresh={tokenRefresh}
+        busy={loading}
+      />
+
       <Stack
         spacing={0.5}
         sx={{
@@ -136,9 +148,6 @@ export default function LoginForm({ auth }: Props) {
         <Typography variant="body2">Role: {activeRole}</Typography>
         <Typography variant="body2">
           Email: {session?.account.email ?? "—"}
-        </Typography>
-        <Typography variant="body2">
-          Access token: {session ? "present" : "none"}
         </Typography>
       </Stack>
     </Stack>
