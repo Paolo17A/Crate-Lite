@@ -3,7 +3,6 @@
 import Link from "next/link";
 import FormStepper from "@/components/onboarding/FormStepper";
 import SignupSuccess from "@/components/onboarding/SignupSuccess";
-import BandConfigurationStep from "@/components/onboarding/steps/BandConfigurationStep";
 import PersonalDetailsStep from "@/components/onboarding/steps/PersonalDetailsStep";
 import PricingTiersStep from "@/components/onboarding/steps/PricingTiersStep";
 import ReviewStep from "@/components/onboarding/steps/ReviewStep";
@@ -25,9 +24,8 @@ export default function PerformerOnboardingPage() {
 
   const canContinue =
     (step === 0 && form.personalValid) ||
-    (step === 1 && form.bandValid) ||
-    (step === 2 && form.pricingValid) ||
-    step === 3;
+    (step === 1 && form.pricingValid) ||
+    step === 2;
 
   return (
     <>
@@ -42,9 +40,8 @@ export default function PerformerOnboardingPage() {
 
       <div className="mt-10">
         {step === 0 && <PersonalDetailsStep form={form} />}
-        {step === 1 && <BandConfigurationStep form={form} />}
-        {step === 2 && <PricingTiersStep form={form} />}
-        {step === 3 && <ReviewStep form={form} />}
+        {step === 1 && <PricingTiersStep form={form} />}
+        {step === 2 && <ReviewStep form={form} />}
       </div>
 
       <div className="mt-10 flex items-center justify-between border-t border-stone/60 pt-6">
@@ -64,11 +61,11 @@ export default function PerformerOnboardingPage() {
         )}
         <button
           type="button"
-          onClick={() => (step === 3 ? submit() : setStep(step + 1))}
+          onClick={() => (step === 2 ? submit() : setStep(step + 1))}
           disabled={!canContinue || submitting}
           className={pillFilled}
         >
-          {step === 3
+          {step === 2
             ? submitting
               ? "Submitting..."
               : "Submit for verification"

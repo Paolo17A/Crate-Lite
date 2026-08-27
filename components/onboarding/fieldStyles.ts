@@ -1,5 +1,8 @@
 export const fieldClass =
-  "w-full rounded-xl border border-stone bg-white px-3.5 py-3 text-sm text-espresso placeholder:text-espresso/40 outline-none focus:border-burnt-orange";
+  "w-full rounded-xl border border-stone bg-sand px-3.5 py-3 text-sm text-espresso placeholder:text-espresso/40 outline-none focus:border-burnt-orange";
+
+export const selectClass =
+  "h-12 w-full appearance-none rounded-xl border border-stone bg-sand px-3.5 pr-10 text-sm leading-[3rem] text-espresso outline-none focus:border-burnt-orange";
 
 export const labelClass =
   "mb-1.5 block text-xs font-medium uppercase tracking-wide text-espresso/60";

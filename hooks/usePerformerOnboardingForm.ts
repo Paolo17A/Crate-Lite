@@ -22,7 +22,7 @@ export function usePerformerOnboardingForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [stageName, setStageName] = useState("");
-  const [category, setCategory] = useState<(typeof ONBOARDING_CATEGORIES)[number]>(
+  const [category, setCategoryState] = useState<(typeof ONBOARDING_CATEGORIES)[number]>(
     ONBOARDING_CATEGORIES[0],
   );
   const [genres, setGenres] = useState<string[]>([]);
@@ -52,30 +52,23 @@ export function usePerformerOnboardingForm() {
     );
   };
 
-  const addMember = () => {
-    setMembers((current) => [...current, { name: "", role: "" }]);
+  const setCategory = (next: (typeof ONBOARDING_CATEGORIES)[number]) => {
+    setCategoryState(next);
+    if (next !== "Band") {
+      setMembers([]);
+    }
   };
 
-  const removeMember = (index: number) => {
-    setMembers((current) => current.filter((_, i) => i !== index));
-  };
-
-  const updateMember = (index: number, patch: Partial<BandMember>) => {
-    setMembers((current) =>
-      current.map((member, i) => (i === index ? { ...member, ...patch } : member)),
-    );
-  };
-
-  const personalValid = isPersonalDetailsValid({
-    firstName,
-    lastName,
-    email,
-    password,
-    stageName,
-    genres,
-    bio,
-  });
-  const bandValid = isBandValid(members);
+  const personalValid =
+    isPersonalDetailsValid({
+      firstName,
+      lastName,
+      email,
+      password,
+      stageName,
+      genres,
+      bio,
+    }) && (category !== "Band" || isBandValid(members));
   const pricingValid = isPricingValid(pricingTiers);
 
   const submit = () => {
@@ -107,17 +100,14 @@ export function usePerformerOnboardingForm() {
     bio,
     setBio,
     members,
+    setMembers,
     pricingTiers,
     submitting,
     done,
     toggle,
     toggleEventType,
     setTierPrice,
-    addMember,
-    removeMember,
-    updateMember,
     personalValid,
-    bandValid,
     pricingValid,
     submit,
   };

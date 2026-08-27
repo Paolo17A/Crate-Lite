@@ -1,5 +1,22 @@
 import type { PerformerOnboardingState } from "@/hooks/usePerformerOnboardingForm";
 import { formatPeso } from "@/lib/format";
+import type { BandMember } from "@/types/performer-onboarding";
+
+function formatMember(member: BandMember): string {
+  const name = member.name.trim();
+  const instrument = member.instrument.trim();
+  const role = member.role.trim();
+  if (instrument && role) {
+    return `${name} — ${instrument} (${role})`;
+  }
+  if (instrument) {
+    return `${name} — ${instrument}`;
+  }
+  if (role) {
+    return `${name} (${role})`;
+  }
+  return name;
+}
 
 export default function ReviewStep({
   form,
@@ -10,16 +27,17 @@ export default function ReviewStep({
   const membersLabel =
     form.members.length === 0
       ? "Solo performer"
-      : form.members
-          .map((member) =>
-            member.role.trim()
-              ? `${member.name} (${member.role})`
-              : member.name,
-          )
-          .join(", ");
+      : form.members.map(formatMember).join(", ");
   const tiersLabel = form.pricingTiers
     .map((tier) => `${tier.eventType}: ${formatPeso(tier.price)}`)
     .join(" · ");
+
+  const reviewRows: [string, string][] = [
+    ["Email", form.email],
+    ["Genres", form.genres.join(", ")],
+    ...(form.category === "Band" ? ([["Band", membersLabel]] as [string, string][]) : []),
+    ["Pricing", tiersLabel],
+  ];
 
   return (
     <div className="animate-fade-up overflow-hidden rounded-2xl border border-stone bg-sand">
@@ -40,12 +58,7 @@ export default function ReviewStep({
         </div>
       </div>
       <dl className="grid gap-x-8 gap-y-3 p-5 text-sm sm:grid-cols-2">
-        {[
-          ["Email", form.email],
-          ["Genres", form.genres.join(", ")],
-          ["Band", membersLabel],
-          ["Pricing", tiersLabel],
-        ].map(([label, value]) => (
+        {reviewRows.map(([label, value]) => (
           <div key={label} className="border-b border-stone/60 pb-2">
             <dt className="text-xs uppercase tracking-wide text-espresso/55">
               {label}

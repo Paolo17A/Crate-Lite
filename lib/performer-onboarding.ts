@@ -37,7 +37,10 @@ export function isPersonalDetailsValid(
 }
 
 export function isBandValid(members: BandMember[]): boolean {
-  return members.every((member) => member.name.trim().length > 0);
+  return (
+    members.length > 0 &&
+    members.every((member) => member.name.trim().length > 0)
+  );
 }
 
 export function isPricingValid(tiers: PricingTier[]): boolean {

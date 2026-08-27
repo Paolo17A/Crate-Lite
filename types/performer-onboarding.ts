@@ -2,7 +2,6 @@ import type { PerformerCategory } from "@/types/performer";
 
 export const ONBOARDING_STEPS = [
   "Personal details",
-  "Band configuration",
   "Pricing tiers",
   "Review",
 ] as const;
@@ -16,6 +15,7 @@ export const ONBOARDING_CATEGORIES = [
 
 export type BandMember = {
   name: string;
+  instrument: string;
   role: string;
 };
 
