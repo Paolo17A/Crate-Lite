@@ -3,6 +3,7 @@ import type { PerformerCategory } from "@/types/performer";
 export const ONBOARDING_STEPS = [
   "Personal details",
   "Pricing tiers",
+  "Gallery",
   "Review",
 ] as const;
 
@@ -24,6 +25,14 @@ export type PricingTier = {
   price: number;
 };
 
+export type OnboardingGalleryItem =
+  | { type: "image"; src: string; title?: string }
+  | { type: "video"; source: "upload"; src: string; title?: string }
+  | { type: "video"; source: "youtube"; youtubeURL: string; title?: string };
+
+/** Client-only id for keys / drag-and-drop. Strip before a future API payload. */
+export type OnboardingGalleryCard = OnboardingGalleryItem & { id: string };
+
 export type PerformerOnboardingValues = {
   firstName: string;
   lastName: string;
@@ -35,4 +44,5 @@ export type PerformerOnboardingValues = {
   bio: string;
   members: BandMember[];
   pricingTiers: PricingTier[];
+  gallery: OnboardingGalleryItem[];
 };

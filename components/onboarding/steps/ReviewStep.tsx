@@ -1,5 +1,10 @@
+"use client";
+
+import OnboardingGalleryPreviewDialog from "@/components/onboarding/OnboardingGalleryPreviewDialog";
+import { useGalleryLightbox } from "@/hooks/useGalleryLightbox";
 import type { PerformerOnboardingState } from "@/hooks/usePerformerOnboardingForm";
 import { formatPeso } from "@/lib/format";
+import { galleryPreviewSrc } from "@/lib/performer-onboarding";
 import type { BandMember } from "@/types/performer-onboarding";
 
 function formatMember(member: BandMember): string {
@@ -31,12 +36,19 @@ export default function ReviewStep({
   const tiersLabel = form.pricingTiers
     .map((tier) => `${tier.eventType}: ${formatPeso(tier.price)}`)
     .join(" · ");
+  const { activeIndex, setActiveIndex, activeItem } = useGalleryLightbox(
+    form.gallery,
+  );
 
   const reviewRows: [string, string][] = [
     ["Email", form.email],
     ["Genres", form.genres.join(", ")],
     ...(form.category === "Band" ? ([["Band", membersLabel]] as [string, string][]) : []),
     ["Pricing", tiersLabel],
+    [
+      "Gallery",
+      `${form.gallery.length} ${form.gallery.length === 1 ? "item" : "items"}`,
+    ],
   ];
 
   return (
@@ -72,7 +84,82 @@ export default function ReviewStep({
           </dt>
           <dd className="mt-1 leading-relaxed text-espresso/80">{form.bio}</dd>
         </div>
+        {form.gallery.length > 0 ? (
+          <div className="sm:col-span-2">
+            <dt className="text-xs uppercase tracking-wide text-espresso/55">
+              Gallery preview
+            </dt>
+            <dd className="mt-2 flex gap-2 overflow-x-auto">
+              {form.gallery.map((item, index) => {
+                const preview = galleryPreviewSrc(item);
+                const isVideo = item.type === "video";
+                const isUploadVideo = isVideo && item.source === "upload";
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setActiveIndex(index)}
+                    className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-stone bg-sand transition-opacity hover:opacity-90"
+                    aria-label={
+                      isVideo
+                        ? `Play gallery video ${index + 1}`
+                        : `Preview gallery image ${index + 1}`
+                    }
+                  >
+                    {isUploadVideo ? (
+                      <video
+                        src={item.src}
+                        muted
+                        playsInline
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={preview}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    )}
+                    {isVideo ? (
+                      <span
+                        className="absolute inset-0 flex items-center justify-center bg-espresso/30"
+                        aria-hidden="true"
+                      >
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-sand/95 text-espresso">
+                          <svg
+                            viewBox="0 0 24 24"
+                            className="ml-px h-3 w-3 fill-current"
+                          >
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </span>
+                      </span>
+                    ) : null}
+                  </button>
+                );
+              })}
+            </dd>
+          </div>
+        ) : null}
       </dl>
+      {activeItem && activeIndex !== null ? (
+        <OnboardingGalleryPreviewDialog
+          open
+          items={form.gallery}
+          activeIndex={activeIndex}
+          activeItem={activeItem}
+          onClose={() => setActiveIndex(null)}
+          onPrevious={() =>
+            setActiveIndex(
+              (activeIndex - 1 + form.gallery.length) % form.gallery.length,
+            )
+          }
+          onNext={() =>
+            setActiveIndex((activeIndex + 1) % form.gallery.length)
+          }
+        />
+      ) : null}
       <p className="border-t border-stone/80 p-5 text-xs text-espresso/55">
         By submitting, you agree to Crate&rsquo;s performer terms: a 12% service
         fee per booking, payouts within 24 hours of completed performances, and

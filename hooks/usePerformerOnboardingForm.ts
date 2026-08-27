@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   isBandValid,
+  isGalleryValid,
   isPersonalDetailsValid,
   isPricingValid,
+  revokeGalleryBlobUrls,
 } from "@/lib/performer-onboarding";
 import {
   ONBOARDING_CATEGORIES,
   type BandMember,
+  type OnboardingGalleryCard,
   type PricingTier,
 } from "@/types/performer-onboarding";
 
@@ -29,9 +32,18 @@ export function usePerformerOnboardingForm() {
   const [bio, setBio] = useState("");
   const [members, setMembers] = useState<BandMember[]>([]);
   const [pricingTiers, setPricingTiers] = useState<PricingTier[]>([]);
+  const [gallery, setGallery] = useState<OnboardingGalleryCard[]>([]);
 
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const galleryRef = useRef(gallery);
+  galleryRef.current = gallery;
+
+  useEffect(() => {
+    return () => {
+      revokeGalleryBlobUrls(galleryRef.current);
+    };
+  }, []);
 
   const toggle = (list: string[], set: (next: string[]) => void, value: string) =>
     set(list.includes(value) ? list.filter((item) => item !== value) : [...list, value]);
@@ -54,6 +66,7 @@ export function usePerformerOnboardingForm() {
       bio,
     }) && (category !== "Band" || isBandValid(members));
   const pricingValid = isPricingValid(pricingTiers);
+  const galleryValid = isGalleryValid(gallery);
 
   const submit = () => {
     if (submitting) return;
@@ -87,11 +100,14 @@ export function usePerformerOnboardingForm() {
     setMembers,
     pricingTiers,
     setPricingTiers,
+    gallery,
+    setGallery,
     submitting,
     done,
     toggle,
     personalValid,
     pricingValid,
+    galleryValid,
     submit,
   };
 }
