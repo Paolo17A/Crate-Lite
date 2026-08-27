@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
-import type { GalleryItem } from "@/types/performer";
 
-export function useGalleryLightbox(items: GalleryItem[]) {
+export function useGalleryLightbox<T>(items: T[]) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
 

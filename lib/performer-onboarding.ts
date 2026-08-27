@@ -1,8 +1,10 @@
 import type {
   BandMember,
+  OnboardingGalleryItem,
   PerformerOnboardingValues,
   PricingTier,
 } from "@/types/performer-onboarding";
+import { parseYoutubeId, youtubeThumbUrl } from "@/lib/youtube";
 
 export const BIO_MIN_LENGTH = 30;
 export const PASSWORD_MIN_LENGTH = 8;
@@ -49,4 +51,37 @@ export function isPricingValid(tiers: PricingTier[]): boolean {
   const normalized = tiers.map((tier) => tier.eventType.trim().toLowerCase());
   if (normalized.length !== new Set(normalized).size) return false;
   return tiers.every((tier) => Number.isFinite(tier.price) && tier.price > 0);
+}
+
+export function isGalleryItemValid(item: OnboardingGalleryItem): boolean {
+  if (item.type === "image") {
+    return item.src.trim().length > 0;
+  }
+  if (item.source === "upload") {
+    return item.src.trim().length > 0;
+  }
+  return (
+    item.youtubeURL.trim().length > 0 &&
+    parseYoutubeId(item.youtubeURL) !== null
+  );
+}
+
+export function isGalleryValid(items: OnboardingGalleryItem[]): boolean {
+  return items.length > 0 && items.every(isGalleryItemValid);
+}
+
+export function galleryPreviewSrc(item: OnboardingGalleryItem): string {
+  if (item.type === "image" || item.source === "upload") {
+    return item.src;
+  }
+  const id = parseYoutubeId(item.youtubeURL);
+  return id ? youtubeThumbUrl(id) : "";
+}
+
+export function revokeGalleryBlobUrls(items: OnboardingGalleryItem[]) {
+  for (const item of items) {
+    if ("src" in item && item.src.startsWith("blob:")) {
+      URL.revokeObjectURL(item.src);
+    }
+  }
 }
