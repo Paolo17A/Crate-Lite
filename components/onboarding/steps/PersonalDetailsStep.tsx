@@ -1,9 +1,10 @@
+import BandMemberRepeater from "@/components/onboarding/BandMemberRepeater";
 import {
   BIO_MIN_LENGTH,
   PASSWORD_MIN_LENGTH,
 } from "@/lib/performer-onboarding";
 import { allGenres } from "@/lib/performers";
-import { chipClass, fieldClass, labelClass } from "@/components/onboarding/fieldStyles";
+import { chipClass, fieldClass, labelClass, selectClass } from "@/components/onboarding/fieldStyles";
 import type { PerformerOnboardingState } from "@/hooks/usePerformerOnboardingForm";
 import { ONBOARDING_CATEGORIES } from "@/types/performer-onboarding";
 import type { PerformerCategory } from "@/types/performer";
@@ -85,20 +86,36 @@ export default function PersonalDetailsStep({
         <label className={labelClass} htmlFor="onboarding-category">
           Category
         </label>
-        <select
-          id="onboarding-category"
-          className={fieldClass}
-          value={form.category}
-          onChange={(e) =>
-            form.setCategory(e.target.value as PerformerCategory)
-          }
-        >
-          {ONBOARDING_CATEGORIES.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            id="onboarding-category"
+            className={selectClass}
+            value={form.category}
+            onChange={(e) =>
+              form.setCategory(e.target.value as PerformerCategory)
+            }
+          >
+            {ONBOARDING_CATEGORIES.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+          <svg
+            className="pointer-events-none absolute right-3.5 top-1/2 h-3 w-3 -translate-y-1/2 text-espresso/55"
+            viewBox="0 0 12 8"
+            fill="none"
+            aria-hidden
+          >
+            <path
+              d="M1.2 1.5 6 6.3 10.8 1.5"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
       </div>
       <div className="sm:col-span-2">
         <span className={labelClass}>Genres (pick at least one)</span>
@@ -122,7 +139,7 @@ export default function PersonalDetailsStep({
         <textarea
           id="onboarding-bio"
           rows={4}
-          className={fieldClass}
+          className={`${fieldClass} h-28 resize-none overflow-y-auto`}
           placeholder="Tell clients what you play, where you've performed, and what makes your sets land..."
           value={form.bio}
           onChange={(e) => form.setBio(e.target.value)}
@@ -131,6 +148,15 @@ export default function PersonalDetailsStep({
           {form.bio.trim().length}/{BIO_MIN_LENGTH}
         </p>
       </div>
+      {form.category === "Band" ? (
+        <div className="sm:col-span-2 space-y-3">
+          <p className="text-sm text-espresso/70">
+            Add at least one band member to continue. Each member needs a name;
+            instrument and role are optional.
+          </p>
+          <BandMemberRepeater members={form.members} onChange={form.setMembers} />
+        </div>
+      ) : null}
     </div>
   );
 }
