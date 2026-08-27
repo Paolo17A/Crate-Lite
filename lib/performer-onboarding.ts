@@ -45,6 +45,7 @@ export function isBandValid(members: BandMember[]): boolean {
 
 export function isPricingValid(tiers: PricingTier[]): boolean {
   if (tiers.length === 0) return false;
+  if (tiers.some((tier) => !tier.eventType.trim())) return false;
   const normalized = tiers.map((tier) => tier.eventType.trim().toLowerCase());
   if (normalized.length !== new Set(normalized).size) return false;
   return tiers.every((tier) => Number.isFinite(tier.price) && tier.price > 0);

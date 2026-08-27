@@ -36,22 +36,6 @@ export function usePerformerOnboardingForm() {
   const toggle = (list: string[], set: (next: string[]) => void, value: string) =>
     set(list.includes(value) ? list.filter((item) => item !== value) : [...list, value]);
 
-  const toggleEventType = (eventType: string) => {
-    setPricingTiers((current) =>
-      current.some((tier) => tier.eventType === eventType)
-        ? current.filter((tier) => tier.eventType !== eventType)
-        : [...current, { eventType, price: 0 }],
-    );
-  };
-
-  const setTierPrice = (eventType: string, price: number) => {
-    setPricingTiers((current) =>
-      current.map((tier) =>
-        tier.eventType === eventType ? { ...tier, price } : tier,
-      ),
-    );
-  };
-
   const setCategory = (next: (typeof ONBOARDING_CATEGORIES)[number]) => {
     setCategoryState(next);
     if (next !== "Band") {
@@ -102,11 +86,10 @@ export function usePerformerOnboardingForm() {
     members,
     setMembers,
     pricingTiers,
+    setPricingTiers,
     submitting,
     done,
     toggle,
-    toggleEventType,
-    setTierPrice,
     personalValid,
     pricingValid,
     submit,
