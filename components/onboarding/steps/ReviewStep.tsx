@@ -165,6 +165,11 @@ export default function ReviewStep({
         fee per booking, payouts within 24 hours of completed performances, and
         identity verification before your profile goes live.
       </p>
+      {form.submitError ? (
+        <p className="border-t border-stone/80 px-5 pb-5 text-sm text-burnt-orange" role="alert">
+          {form.submitError}
+        </p>
+      ) : null}
     </div>
   );
 }

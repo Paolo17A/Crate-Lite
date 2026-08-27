@@ -2,16 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
+  buildRegisterFormData,
   isBandValid,
   isGalleryValid,
   isPersonalDetailsValid,
   isPricingValid,
+  registerPerformerRequest,
   revokeGalleryBlobUrls,
+  revokeImageUpload,
 } from "@/lib/performer-onboarding";
 import {
   ONBOARDING_CATEGORIES,
   type BandMember,
   type OnboardingGalleryCard,
+  type OnboardingImageUpload,
   type PricingTier,
 } from "@/types/performer-onboarding";
 
@@ -33,15 +37,26 @@ export function usePerformerOnboardingForm() {
   const [members, setMembers] = useState<BandMember[]>([]);
   const [pricingTiers, setPricingTiers] = useState<PricingTier[]>([]);
   const [gallery, setGallery] = useState<OnboardingGalleryCard[]>([]);
+  const [profileImage, setProfileImageState] = useState<OnboardingImageUpload | null>(
+    null,
+  );
+  const [validId, setValidIdState] = useState<OnboardingImageUpload | null>(null);
 
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const galleryRef = useRef(gallery);
   galleryRef.current = gallery;
+  const profileImageRef = useRef(profileImage);
+  profileImageRef.current = profileImage;
+  const validIdRef = useRef(validId);
+  validIdRef.current = validId;
 
   useEffect(() => {
     return () => {
       revokeGalleryBlobUrls(galleryRef.current);
+      revokeImageUpload(profileImageRef.current);
+      revokeImageUpload(validIdRef.current);
     };
   }, []);
 
@@ -55,6 +70,24 @@ export function usePerformerOnboardingForm() {
     }
   };
 
+  const setProfileImage = (next: OnboardingImageUpload | null) => {
+    setProfileImageState((current) => {
+      if (current && current.previewUrl !== next?.previewUrl) {
+        revokeImageUpload(current);
+      }
+      return next;
+    });
+  };
+
+  const setValidId = (next: OnboardingImageUpload | null) => {
+    setValidIdState((current) => {
+      if (current && current.previewUrl !== next?.previewUrl) {
+        revokeImageUpload(current);
+      }
+      return next;
+    });
+  };
+
   const personalValid =
     isPersonalDetailsValid({
       firstName,
@@ -64,17 +97,39 @@ export function usePerformerOnboardingForm() {
       stageName,
       genres,
       bio,
+      profileImage,
+      validId,
     }) && (category !== "Band" || isBandValid(members));
   const pricingValid = isPricingValid(pricingTiers);
   const galleryValid = isGalleryValid(gallery);
 
-  const submit = () => {
-    if (submitting) return;
+  const submit = async () => {
+    if (submitting || !profileImage || !validId) return;
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
+    setSubmitError(null);
+    try {
+      const formData = buildRegisterFormData({
+        firstName,
+        lastName,
+        email,
+        password,
+        stageName,
+        category,
+        genres,
+        bio,
+        members,
+        pricingTiers,
+        gallery,
+        profileImage: profileImage.file,
+        validId: validId.file,
+      });
+      await registerPerformerRequest(formData);
       setDone(true);
-    }, 1200);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Registration failed");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return {
@@ -102,7 +157,12 @@ export function usePerformerOnboardingForm() {
     setPricingTiers,
     gallery,
     setGallery,
+    profileImage,
+    setProfileImage,
+    validId,
+    setValidId,
     submitting,
+    submitError,
     done,
     toggle,
     personalValid,

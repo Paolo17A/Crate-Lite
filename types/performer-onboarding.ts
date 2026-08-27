@@ -30,8 +30,16 @@ export type OnboardingGalleryItem =
   | { type: "video"; source: "upload"; src: string; title?: string }
   | { type: "video"; source: "youtube"; youtubeURL: string; title?: string };
 
-/** Client-only id for keys / drag-and-drop. Strip before a future API payload. */
-export type OnboardingGalleryCard = OnboardingGalleryItem & { id: string };
+/** Client-only id for keys / drag-and-drop; also used as gallery fileKey. */
+export type OnboardingGalleryCard = OnboardingGalleryItem & {
+  id: string;
+  file?: File;
+};
+
+export type OnboardingImageUpload = {
+  file: File;
+  previewUrl: string;
+};
 
 export type PerformerOnboardingValues = {
   firstName: string;

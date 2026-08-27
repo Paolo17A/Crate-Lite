@@ -4,12 +4,12 @@ import { useRef, useState } from "react";
 import type { OnboardingGalleryCard } from "@/types/performer-onboarding";
 import { parseYoutubeId } from "@/lib/youtube";
 
-const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const IMAGE_TYPES = new Set(["image/jpeg", "image/png"]);
 const VIDEO_TYPES = new Set(["video/mp4"]);
-const IMAGE_EXT = /\.(jpe?g|png|webp)$/i;
+const IMAGE_EXT = /\.(jpe?g|png)$/i;
 const VIDEO_EXT = /\.mp4$/i;
 
-export const GALLERY_ACCEPT = "image/jpeg,image/png,image/webp,video/mp4";
+export const GALLERY_ACCEPT = "image/jpeg,image/png,video/mp4";
 export const GALLERY_DRAG_TYPE = "text/plain";
 export const GALLERY_DRAG_PREFIX = "gallery:";
 
@@ -33,7 +33,6 @@ function revokeBlobSrc(src: string | undefined) {
 export function usePerformerGallery({ items, onChange }: Props) {
   const [youtubeUrl, setYoutubeUrlState] = useState("");
   const [youtubeError, setYoutubeError] = useState("");
-  const filesRef = useRef(new Map<string, File>());
   const itemsRef = useRef(items);
   itemsRef.current = items;
 
@@ -49,11 +48,10 @@ export function usePerformerGallery({ items, onChange }: Props) {
       if (!kind) continue;
       const id = crypto.randomUUID();
       const src = URL.createObjectURL(file);
-      filesRef.current.set(id, file);
       if (kind === "image") {
-        next.push({ id, type: "image", src });
+        next.push({ id, type: "image", src, file });
       } else {
-        next.push({ id, type: "video", source: "upload", src });
+        next.push({ id, type: "video", source: "upload", src, file });
       }
     }
     if (next.length === 0) return;
@@ -94,7 +92,6 @@ export function usePerformerGallery({ items, onChange }: Props) {
     if (item && "src" in item) {
       revokeBlobSrc(item.src);
     }
-    filesRef.current.delete(id);
     onChange(current.filter((entry) => entry.id !== id));
   };
 

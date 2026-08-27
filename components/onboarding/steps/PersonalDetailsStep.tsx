@@ -1,4 +1,5 @@
 import BandMemberRepeater from "@/components/onboarding/BandMemberRepeater";
+import OnboardingImageField from "@/components/onboarding/OnboardingImageField";
 import {
   BIO_MIN_LENGTH,
   PASSWORD_MIN_LENGTH,
@@ -116,6 +117,24 @@ export default function PersonalDetailsStep({
             />
           </svg>
         </div>
+      </div>
+      <div>
+        <OnboardingImageField
+          id="onboarding-profile-image"
+          label="Profile photo"
+          hint="JPEG or PNG"
+          value={form.profileImage}
+          onChange={form.setProfileImage}
+        />
+      </div>
+      <div>
+        <OnboardingImageField
+          id="onboarding-valid-id"
+          label="Valid ID"
+          hint="JPEG or PNG of a government ID"
+          value={form.validId}
+          onChange={form.setValidId}
+        />
       </div>
       <div className="sm:col-span-2">
         <span className={labelClass}>Genres (pick at least one)</span>
